@@ -1,78 +1,6 @@
 // Product Data
-const products = [
-    {
-        id: "1",
-        name: "Three Layered Cake",
-        description: "Traditional sourdough with a perfect crust and tangy flavor",
-        price: "4956.99",
-        category: "bread",
-        imageUrl: "Gambars/Cake1.jpg",
-        featured: true
-    },
-    {
-        id: "2",
-        name: "Two Layered Cake",
-        description: "Rich chocolate cake with velvety buttercream frosting",
-        price: "2154.99",
-        category: "cakes",
-        imageUrl: "Gambars/Cake2.jpg",
-        featured: true
-    },
-    {
-        id: "3",
-        name: "One Layered Cake",
-        description: "Flaky, buttery croissants perfect for breakfast",
-        price: "509.50",
-        category: "pastries",
-        imageUrl: "Gambars/Cake3.jpg",
-        featured: true
-    },
-    {
-        id: "4",
-        name: "Custom Cake",
-        description: "Nutritious and hearty whole grain bread",
-        price: "145.99",
-        category: "bread",
-        imageUrl: "Gambars/Cake4.jpg",
-        featured: false
-    },
-    {
-        id: "5",
-        name: "Children Cake",
-        description: "Light sponge cake with fresh berries and vanilla cream",
-        price: "110.99",
-        category: "cakes",
-        imageUrl: "Gambars/CCake1.jpg",
-        featured: false
-    },
-    {
-        id: "6",
-        name: "Birthday Cake",
-        description: "Assorted fruit-topped Danish pastries",
-        price: "120.50",
-        category: "pastries",
-        imageUrl: "Gambars/CCake2.jpg",
-        featured: false
-    },
-    {
-        id: "7",
-        name: "Small Cartoon Cake",
-        description: "Classic French baguettes with crusty exterior",
-        price: "121.99",
-        category: "bread",
-        imageUrl: "Gambars/CCake3.jpg",
-        featured: false
-    },
-    {
-        id: "8",
-        name: "Big Cartoon Cake",
-        description: "Classic red velvet cake with cream cheese frosting",
-        price: "330.99",
-        category: "cakes",
-        imageUrl: "Gambars/CCake4.jpg",
-        featured: false
-    }
-];
+const API_URL = 'https://nors-bakery-backend.onrender.com';
+let products = [];
 
 // Global State
 let cart = [];
@@ -166,21 +94,37 @@ function loadFeaturedProducts() {
     }
 }
 
-function loadProducts() {
-    filterProducts(currentCategory);
+async function loadProducts() {
+    const productsGrid = document.getElementById('products-grid');
+    if (productsGrid) {
+        productsGrid.innerHTML = '<p class="loading">Loading fresh treats...</p>';
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/products`);
+        products = await response.json(); // Save the live data into our global products variable
+        
+        // Now that we have the data, show it
+        filterProducts(currentCategory); 
+    } catch (error) {
+        console.error("Error loading products:", error);
+        if (productsGrid) {
+            productsGrid.innerHTML = '<p>Error loading products. Check your connection!</p>';
+        }
+    }
 }
 
 function filterProducts(category) {
     currentCategory = category;
 
-    // Update filter buttons
+// Update filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    const activeBtn = document.querySelector(`[data-testid="button-filter-${category}"]`);
+    const activeBtn = document.querySelector(`[onclick="filterProducts('${category}')"]`);
     if (activeBtn) activeBtn.classList.add('active');
 
-    // Filter and display products
+    // Filter and display products from the dynamic 'products' array
     const filteredProducts = category === 'all'
         ? products
         : products.filter(product => product.category === category);
@@ -201,7 +145,7 @@ function createProductCard(product, featured = false) {
 
     return `
         <div class="${cardClass}">
-            <img src="${product.imageUrl}" 
+            <img src="${product.image_url}" 
                  alt="${product.name}" 
                  class="product-image"
                  data-testid="${featured ? `img-product-featured-${product.id}` : `img-product-${product.id}`}">
