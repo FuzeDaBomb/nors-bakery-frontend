@@ -28,9 +28,8 @@
             const data = await response.json();
             if (data.success) {
                 alert("Welcome back, Boss!");
-                // Later we will redirect to a dashboard here
-            } else {
-                document.getElementById('message').innerText = "Wrong password!";
+                window.location.href = "dashboard.html"; }
+            else {document.getElementById('message').innerText = "Wrong password!";
             }
         }
     </script>
