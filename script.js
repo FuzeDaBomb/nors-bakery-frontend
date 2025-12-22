@@ -158,7 +158,7 @@ function createProductCard(product, featured = false) {
                 </p>
                 <div class="product-footer">
                     <span class="${priceClass}" data-testid="text-product-price-${product.id}">
-                        RM${product.price}
+                        RM${parseFloat(product.price).toFixed(2)}
                     </span>
                     <button class="${btnClass}" 
                             onclick="addToCart('${product.id}')"
@@ -173,7 +173,7 @@ function createProductCard(product, featured = false) {
 
 // Cart Functions
 function addToCart(productId, quantity = 1) {
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => p.id.toString() === productId.toString());
     if (!product) return;
 
     const existingItem = cart.find(item => item.productId === productId);
@@ -257,7 +257,7 @@ function updateCartUI() {
 function createCartItem(item) {
     return `
         <div class="cart-item" data-testid="card-cart-item-${item.productId}">
-            <img src="${item.product.imageUrl}" 
+            <img src="${item.product.image_url}" 
                  alt="${item.product.name}" 
                  class="cart-item-image"
                  data-testid="img-cart-item-${item.productId}">
@@ -555,21 +555,22 @@ function handleChatKeyPress(event) {
         sendMessage();
     }
 }
-async function loadTransactions() {
-    try {       
-        const response = await fetch('https://nors-bakery-backend.onrender.com/transactions')
-        const data = await response.json();
-        
-        console.log("Bakery Data:", data);
-        
-        const list = document.getElementById('order-list');
-        data.forEach(item => {
-            const row = `<li>${item.item_name} - $${item.amount}</li>`;
-            list.innerHTML += row;
-        });
+async function loadFeaturedProducts() {
+    const featuredGrid = document.getElementById('featured-products');
+    if (!featuredGrid) return; // Exit if we aren't on the homepage
+
+    try {
+        // Fetch all products if they aren't loaded yet
+        if (products.length === 0) {
+            const response = await fetch(`${API_URL}/products`);
+            products = await response.json();
+        }
+
+        // Filter products where 'featured' is true in Supabase
+        const featuredProducts = products.filter(product => product.featured === true);
+
+        featuredGrid.innerHTML = featuredProducts.map(product => createProductCard(product, true)).join('');
     } catch (error) {
-        console.error("Could not load bakery data:", error);
+        console.error("Error loading featured products:", error);
     }
 }
-
-loadTransactions();
