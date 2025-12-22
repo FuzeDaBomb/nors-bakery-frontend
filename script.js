@@ -137,33 +137,24 @@ function filterProducts(category) {
 
 function createProductCard(product, featured = false) {
     const cardClass = featured ? 'product-card featured hover-lift' : 'product-card hover-lift';
-    const infoClass = featured ? 'product-info featured' : 'product-info';
-    const nameClass = featured ? 'product-name featured' : 'product-name';
-    const priceClass = featured ? 'product-price featured' : 'product-price';
-    const btnClass = featured ? 'add-to-cart-btn featured' : 'add-to-cart-btn icon-only';
-    const btnText = featured ? 'Add to Cart' : '+';
+    
+const imagePath = `./${product.image_url}`;
 
     return `
         <div class="${cardClass}">
-            <img src="${product.image_url}" 
-                 alt="${product.name}" 
-                 class="product-image"
-                 data-testid="${featured ? `img-product-featured-${product.id}` : `img-product-${product.id}`}">
-            <div class="${infoClass}">
-                <h3 class="${nameClass}" data-testid="text-product-name-${product.id}">
-                    ${product.name}
-                </h3>
-                <p class="product-description" data-testid="text-product-description-${product.id}">
-                    ${product.description}
-                </p>
+            <div class="product-image-container">
+                <img src="${imagePath}" 
+                     alt="${product.name}" 
+                     class="product-image"
+                     onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-description">${product.description}</p>
                 <div class="product-footer">
-                    <span class="${priceClass}" data-testid="text-product-price-${product.id}">
-                        RM${parseFloat(product.price).toFixed(2)}
-                    </span>
-                    <button class="${btnClass}" 
-                            onclick="addToCart('${product.id}')"
-                            data-testid="button-add-cart-${product.id}">
-                        ${btnText}
+                    <span class="product-price">RM${parseFloat(product.price).toFixed(2)}</span>
+                    <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">
+                        ${featured ? 'Add to Cart' : '+'}
                     </button>
                 </div>
             </div>
@@ -256,34 +247,20 @@ function updateCartUI() {
 
 function createCartItem(item) {
     return `
-        <div class="cart-item" data-testid="card-cart-item-${item.productId}">
-            <img src="${item.product.image_url}" 
+        <div class="cart-item">
+            <img src="./${item.product.image_url}" 
                  alt="${item.product.name}" 
-                 class="cart-item-image"
-                 data-testid="img-cart-item-${item.productId}">
+                 class="cart-item-image">
             <div class="cart-item-info">
-                <h4 class="cart-item-name" data-testid="text-cart-item-name-${item.productId}">
-                    ${item.product.name}
-                </h4>
-                <p class="cart-item-price" data-testid="text-cart-item-price-${item.productId}">
-                    RM ${item.product.price}
-                </p>
+                <h4>${item.product.name}</h4>
+                <p>RM${parseFloat(item.product.price).toFixed(2)}</p>
+                <div class="cart-item-controls">
+                    <button onclick="updateCartQuantity('${item.productId}', ${item.quantity - 1})">-</button>
+                    <span>${item.quantity}</span>
+                    <button onclick="updateCartQuantity('${item.productId}', ${item.quantity + 1})">+</button>
+                </div>
             </div>
-            <div class="cart-item-controls">
-                <button class="quantity-btn" 
-                        onclick="updateCartQuantity('${item.productId}', ${item.quantity - 1})"
-                        data-testid="button-decrease-quantity-${item.productId}">
-                    -
-                </button>
-                <span class="cart-item-quantity" data-testid="text-cart-item-quantity-${item.productId}">
-                    ${item.quantity}
-                </span>
-                <button class="quantity-btn" 
-                        onclick="updateCartQuantity('${item.productId}', ${item.quantity + 1})"
-                        data-testid="button-increase-quantity-${item.productId}">
-                    +
-                </button>
-            </div>
+            <button class="remove-item" onclick="removeFromCart('${item.productId}')">×</button>
         </div>
     `;
 }
