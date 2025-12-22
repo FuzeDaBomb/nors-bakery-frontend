@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Nors Bakery</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Checkout Specific Styles */
+        .checkout-container {
+            padding: 4rem 0;
+        }
+        
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkout-form-section {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-header-checkout {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step-circle {
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: var(--border-radius);
+            font-family: var(--font-sans);
+            background: var(--background);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .radio-option {
+            border: 2px solid var(--border);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+
+        .radio-option:hover {
+            border-color: var(--primary);
+        }
+
+        .radio-option.selected {
+            border-color: var(--primary);
+            background: hsla(37, 100%, 68%, 0.1);
+        }
+
+        .summary-card {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 6rem;
+        }
+
+        .summary-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .summary-details h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-price {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--muted-foreground);
+        }
+
+        .grand-total {
+            border-top: 2px solid var(--border);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--foreground);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #card-payment-details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        
+       
+        :root {
+             --border-visible: #e5e7eb;
+        }
+        .radio-option, .form-group input, .section-header-checkout, .summary-item, .grand-total, #card-payment-details {
+            border-color: var(--border-visible); 
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (Same as other pages) -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon"><img src="Gambars/logo2.jpg" alt="Logo" /></span>
+                    <h1>Nors Bakery</h1>
+                </a>
+                <nav class="nav-desktop">
+                    <a href="index.html">Home</a>
+                    <a href="products.html">Products</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="cart-btn" onclick="toggleCart()">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count" id="cart-count-header">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-container container">
+        <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
+            <a href="products.html" style="text-decoration: none; color: var(--muted-foreground);">← Back to Menu</a>
+            <h1 class="section-title" style="margin-top: 0.5rem;">Checkout</h1>
+        </div>
+
+        <div class="checkout-grid">
+            <div class="checkout-left">
+                <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)">
+                    <!-- Step 1: Delivery -->
+                    <div class="checkout-form-section">
+                        <div class="section-header-checkout">
+                            <div class="step-circle">1</div>
+                            <h3>Delivery Method</h3>
+                        </div>
+                        <div class="radio-options">
+                            <label class="radio-option selected" onclick="selectDelivery('pickup')">
+                                <input type="radio" name="delivery" value="pickup" checked hidden>
+                                <span style="font-size: 1.5rem;">🏪</span>
+                                <div>
+                                    <strong>Store Pickup</strong>
+                                    <div style="font-size: 0.85rem; color: var(--muted-foreground);">Free • Ready in 24 hours</div>
+                                </div>
+                            </label>
+                            <label class="radio-option" onclick="selectDelivery('delivery')">
+                                <input type="radio" name="delivery" value="delivery" hidden>
+                                <span style="font-size: 1.5rem;">🚚</span>
+                                <div>
+                                    <strong>Delivery</strong>
+                                    <div style="font-size: 0.85rem; color: var(--muted-foreground);">RM 15.00 • Within 15km radius</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Details -->
+                    <div class="checkout-form-section">
+                        <div class="section-header-checkout">
+                            <div class="step-circle">2</div>
+                            <h3>Your Details</h3>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" required>
+                            </div>
+                        </div>
+                        
+                        <div id="delivery-address-fields" style="display: none;">
+                            <div class="form-group">
+                                <label>Street Address</label>
+                                <input type="text" id="addr-input">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <input type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label>Postcode</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="date" id="pickup-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Time</label>
+                                <input type="time" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Payment -->
+                    <div class="checkout-form-section">
+                        <div class="section-header-checkout">
+                            <div class="step-circle">3</div>
+                            <h3>Payment</h3>
+                        </div>
+                        <div class="radio-options">
+                            <label class="radio-option selected" onclick="selectPayment('card')">
+                                <input type="radio" name="payment" value="card" checked hidden>
+                                <span>💳 Credit / Debit Card</span>
+                            </label>
+                            <div id="card-payment-details">
+                                <div class="form-group">
+                                    <label>Card Number</label>
+                                    <input type="text" placeholder="0000 0000 0000 0000">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Expiry</label>
+                                        <input type="text" placeholder="MM/YY">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CVC</label>
+                                        <input type="text" placeholder="123">
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="radio-option" onclick="selectPayment('cash')">
+                                <input type="radio" name="payment" value="cash" hidden>
+                                <span>💵 Cash on Pickup / Delivery</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full" style="padding: 1rem; font-size: 1.1rem;">Place Order</button>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="checkout-right">
+                <div class="summary-card">
+                    <h3>Order Summary</h3>
+                    <div id="checkout-items">
+                        <!-- Items will be injected here -->
+                        <p style="color: var(--muted-foreground); padding: 1rem 0;">Loading cart...</p>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <div class="total-row">
+                            <span>Subtotal</span>
+                            <span id="checkout-subtotal">RM 0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Tax (6%)</span>
+                            <span id="checkout-tax">RM 0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Shipping</span>
+                            <span id="checkout-shipping">Free</span>
+                        </div>
+                        <div class="grand-total">
+                            <span>Total</span>
+                            <span id="checkout-total">RM 0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar (Hidden but kept for script compatibility) -->
+    <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3 class="cart-title">Shopping Cart</h3>
+            <button class="cart-close" onclick="closeCart()">✕</button>
+        </div>
+        <div class="cart-content" id="cart-content">
+            <div class="cart-items" id="cart-items"></div>
+        </div>
+        <div class="cart-footer" id="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="cart-total-amount" id="cart-total">RM0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Checkout Specific Logic
+        let deliveryCost = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            setTimeout(renderCheckoutItems, 100);
+            
+            // Date picker min date
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('pickup-date').min = tomorrow.toISOString().split('T')[0];
+        });
+
+        function selectDelivery(type) {
+            const options = document.querySelectorAll('input[name="delivery"]');
+            options.forEach(opt => {
+                if (opt.value === type) {
+                    opt.checked = true;
+                    opt.closest('.radio-option').classList.add('selected');
+                } else {
+                    opt.closest('.radio-option').classList.remove('selected');
+                }
+            });
+
+            const addrFields = document.getElementById('delivery-address-fields');
+            const addrInput = document.getElementById('addr-input');
+
+            if (type === 'delivery') {
+                deliveryCost = 15.00;
+                addrFields.style.display = 'block';
+                addrInput.required = true;
+            } else {
+                deliveryCost = 0;
+                addrFields.style.display = 'none';
+                addrInput.required = false;
+            }
+            
+            updateCheckoutTotals();
+        }
+
+        function selectPayment(type) {
+            const options = document.querySelectorAll('input[name="payment"]');
+            options.forEach(opt => {
+                if (opt.value === type) {
+                    opt.checked = true;
+                    opt.closest('.radio-option').classList.add('selected');
+                } else {
+                    opt.closest('.radio-option').classList.remove('selected');
+                }
+            });
+
+            const cardDetails = document.getElementById('card-payment-details');
+            if (type === 'card') {
+                cardDetails.style.display = 'block';
+            } else {
+                cardDetails.style.display = 'none';
+            }
+        }
+
+        function renderCheckoutItems() {
+            const container = document.getElementById('checkout-items');
+            
+            if (!cart || cart.length === 0) {
+                container.innerHTML = '<p>Your cart is empty. <a href="products.html">Go shopping</a></p>';
+                updateCheckoutTotals();
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="summary-item">
+                    <img src="${item.product.imageUrl}" alt="${item.product.name}" class="summary-img">
+                    <div class="summary-details">
+                        <h4>${item.product.name}</h4>
+                        <div style="font-size: 0.8rem; color: var(--muted-foreground);">Qty: ${item.quantity}</div>
+                    </div>
+                    <div class="summary-price">RM ${(item.product.price * item.quantity).toFixed(2)}</div>
+                </div>
+            `).join('');
+
+            updateCheckoutTotals();
+        }
+
+        function updateCheckoutTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.product.price) * item.quantity), 0);
+            const tax = subtotal * 0.06;
+            const total = subtotal + tax + deliveryCost;
+
+            document.getElementById('checkout-subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
+            document.getElementById('checkout-tax').textContent = `RM ${tax.toFixed(2)}`;
+            document.getElementById('checkout-shipping').textContent = deliveryCost === 0 ? 'Free' : `RM ${deliveryCost.toFixed(2)}`;
+            document.getElementById('checkout-total').textContent = `RM ${total.toFixed(2)}`;
+        }
+
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.textContent = "Processing...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert("Order placed successfully! Thank you for choosing Nors Bakery.");
+                // Clear cart
+                cart = [];
+                localStorage.removeItem('norsCart');
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

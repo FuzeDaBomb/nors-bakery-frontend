@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Nors Bakery</title>
+    <meta name="description" content="Learn about Nors Bakery's three generations of family tradition and artisan craftsmanship since 1952.">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon"><img src="Gambars/logo2.jpg" alt="Logo" /></span>
+                    <h1>Nors Bakery</h1>
+                </a>
+
+                <nav class="nav-desktop">
+                    <a href="index.html" data-testid="nav-home">Home</a>
+                    <a href="products.html" data-testid="nav-products">Products</a>
+                    <a href="about.html" data-testid="nav-about" class="active">About</a>
+                    <a href="contact.html" data-testid="nav-contact">Contact</a>
+                </nav>
+
+                <div class="header-actions">
+                    <button class="cart-btn" onclick="toggleCart()" data-testid="button-cart-toggle">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count" id="cart-count" data-testid="text-cart-count">0</span>
+                    </button>
+
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" data-testid="button-mobile-menu">
+                        <span class="hamburger" id="hamburger">☰</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobile-menu">
+                <nav class="nav-mobile">
+                    <a href="index.html" onclick="closeMobileMenu()" data-testid="nav-mobile-home">Home</a>
+                    <a href="products.html" onclick="closeMobileMenu()" data-testid="nav-mobile-products">Products</a>
+                    <a href="about.html" onclick="closeMobileMenu()" data-testid="nav-mobile-about">About</a>
+                    <a href="contact.html" onclick="closeMobileMenu()" data-testid="nav-mobile-contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <div class="page-hero-content">
+                <h1 class="page-title" data-testid="text-page-title">Our Story</h1>
+                <p class="page-description">Three generations of family tradition and artisan craftsmanship</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="Gambars/photo1.jpg"
+                         alt="Baker working in traditional bakery kitchen" data-testid="img-about-bakery">
+                </div>
+                <div class="about-text">
+                    <h2 class="section-title" data-testid="text-about-title">Our Story</h2>
+                    <p class="about-paragraph">
+                        The Nors Bakery has been serving our community with the finest handcrafted Pastries and artisan cakes. What started as a small family dream in 2012 has grown into a beloved neighborhood institution.
+                    </p>
+                    <p class="about-paragraph">
+                        We use only the finest ingredients, traditional techniques, and a whole lot of love in everything we bake. From our signature sourdough that rises for 24 hours to our decadent chocolate cakes, every item is made fresh daily.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" data-testid="text-stat-years">20+</div>
+                            <div class="stat-label">Years of Excellence</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-testid="text-stat-items">10+</div>
+                            <div class="stat-label">Daily Fresh Items</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-testid="text-stat-customers">500+</div>
+                            <div class="stat-label">Happy Customers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Testimonials -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-testid="text-testimonials-title">What Our Customers Say</h2>
+                <p class="section-description">Hear from our happy customers</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card" data-testid="card-testimonial-0">
+                    <div class="testimonial-header">
+                        <img src="Gambars/feedback1.jpg"
+                             class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <h4 class="testimonial-name" data-testid="text-testimonial-name-0"></h4>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text" data-testid="text-testimonial-text-1">
+
+                    </p>
+                </div>
+
+                <div class="testimonial-card" data-testid="card-testimonial-1">
+                    <div class="testimonial-header">
+                        <img src="Gambars/feedback2.jpg"
+                             alt="Mike Chen" class="testimonial-avatar" data-testid="img-testimonial-avatar-1">
+                        <div class="testimonial-info">
+                            <h4 class="testimonial-name" data-testid="text-testimonial-name-1"></h4>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text" data-testid="text-testimonial-text-1">
+
+                    </p>
+                </div>
+
+                <div class="testimonial-card" data-testid="card-testimonial-2">
+                    <div class="testimonial-header">
+                        <img src="Gambars/feedback3.jpg"
+                             alt="Emily Rodriguez" class="testimonial-avatar" data-testid="img-testimonial-avatar-2">
+                        <div class="testimonial-info">
+                            <h4 class="testimonial-name" data-testid="text-testimonial-name-2"></h4>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text" data-testid="text-testimonial-text-2">
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span class="logo-icon"><img src="Gambars/logo2.jpg" alt="Logo" /></span>
+                        <h3>Nors Bakery</h3>
+                    </div>
+                    <p class="footer-description">
+                        Baking fresh happiness since 2012.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=bread">Wedding cake</a></li>
+                        <li><a href="products.html?category=cakes">Custom Cakes</a></li>
+                        <li><a href="products.html?category=pastries">Birthday Cake</a></li>
+                        <li><a href="contact.html">Special Orders</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="footer-contact">
+                        <p>📍 Nors bakery</p>
+                        <p>📞 011234567</p>
+                        <p>✉️ Nors@bakery.com.my</p>
+                        <p>🕒 operation hours 8am-10pm</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Nors Bakery. All rights reserved. | Made with ♥ for our community</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay" onclick="closeCart()" data-testid="overlay-cart"></div>
+    <div class="cart-sidebar" id="cart-sidebar" data-testid="sidebar-cart">
+        <div class="cart-header">
+            <h3 class="cart-title" data-testid="text-cart-title">Shopping Cart</h3>
+            <button class="cart-close" onclick="closeCart()" data-testid="button-close-cart">✕</button>
+        </div>
+
+        <div class="cart-content" id="cart-content">
+            <div class="cart-empty" id="cart-empty" data-testid="text-cart-empty">
+                <div class="cart-empty-icon">🛒</div>
+                <p>Your cart is empty</p>
+            </div>
+            <div class="cart-items" id="cart-items"></div>
+        </div>
+
+        <div class="cart-footer" id="cart-footer" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="cart-total-amount" id="cart-total" data-testid="text-cart-total">$0.00</span>
+            </div>
+            <div class="cart-actions">
+                <button class="btn btn-primary btn-full" onclick="checkout()" data-testid="button-checkout">
+                    Proceed to Checkout
+                </button>
+                <button class="btn btn-outline btn-full" onclick="clearCart()" data-testid="button-clear-cart">
+                    Clear Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot">
+        <button class="chatbot-toggle" onclick="toggleChatbot()" data-testid="button-chat-toggle">
+            💬
+        </button>
+
+        <div class="chatbot-window" id="chatbot-window" data-testid="card-chat-window">
+            <div class="chatbot-header">
+                <div class="chatbot-header-info">
+                    <span class="chatbot-icon">🤖</span>
+                    <h4 data-testid="text-chat-title">Chat Bot</h4>
+                </div>
+                <button class="chatbot-close" onclick="closeChatbot()" data-testid="button-close-chat">✕</button>
+            </div>
+            <p class="chatbot-subtitle">How can I help you today?</p>
+
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="message bot-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Hello! I'm here to help you with our bakery products. What would you like to know?</p>
+                    </div>
+                </div>
+
+                <div class="quick-actions" id="quick-actions">
+                    <button class="quick-action" onclick="sendQuickAction('hours')" data-testid="button-quick-action-hours">
+                        🕒 Store Hours
+                    </button>
+                    <button class="quick-action" onclick="sendQuickAction('specials')" data-testid="button-quick-action-specials">
+                        🎂 Today's Specials
+                    </button>
+                    <button class="quick-action" onclick="sendQuickAction('orders')" data-testid="button-quick-action-orders">
+                        📋 Custom Orders
+                    </button>
+                    <button class="quick-action" onclick="sendQuickAction('location')" data-testid="button-quick-action-location">
+                        📍 Location & Directions
+                    </button>
+                </div>
+            </div>
+
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input-field" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)" data-testid="input-chat-message">
+                <button onclick="sendMessage()" data-testid="button-send-message">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
