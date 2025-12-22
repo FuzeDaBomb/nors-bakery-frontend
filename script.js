@@ -1,5 +1,5 @@
 // Product Data
-const API_URL = 'https://nors-bakery-backend.onrender.com';
+const API_URL = 'https://nors-bakery-backend.onrender.com/api';
 let products = [];
 
 // Global State
@@ -530,24 +530,5 @@ function createChatMessage(message) {
 function handleChatKeyPress(event) {
     if (event.key === 'Enter') {
         sendMessage();
-    }
-}
-async function loadFeaturedProducts() {
-    const featuredGrid = document.getElementById('featured-products');
-    if (!featuredGrid) return; // Exit if we aren't on the homepage
-
-    try {
-        // Fetch all products if they aren't loaded yet
-        if (products.length === 0) {
-            const response = await fetch(`${API_URL}/products`);
-            products = await response.json();
-        }
-
-        // Filter products where 'featured' is true in Supabase
-        const featuredProducts = products.filter(product => product.featured === true);
-
-        featuredGrid.innerHTML = featuredProducts.map(product => createProductCard(product, true)).join('');
-    } catch (error) {
-        console.error("Error loading featured products:", error);
     }
 }
