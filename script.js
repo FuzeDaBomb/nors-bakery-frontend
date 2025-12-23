@@ -120,21 +120,30 @@ async function loadProducts() {
 function filterProducts(category) {
     currentCategory = category;
 
-// Update filter buttons
+    // Update filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
+    
+    // This finds the button you clicked and makes it orange
     const activeBtn = document.querySelector(`[onclick="filterProducts('${category}')"]`);
     if (activeBtn) activeBtn.classList.add('active');
 
-    // Filter and display products from the dynamic 'products' array
+    // THE FIX: Check for exact matches with your Supabase data
     const filteredProducts = category === 'all'
         ? products
-        : products.filter(product => product.category === category);
+        : products.filter(product => {
+            // This handles both lowercase and uppercase mismatches
+            return product.category.trim().toLowerCase() === category.trim().toLowerCase();
+        });
 
     const productsGrid = document.getElementById('products-grid');
     if (productsGrid) {
-        productsGrid.innerHTML = filteredProducts.map(product => createProductCard(product, false)).join('');
+        if (filteredProducts.length === 0) {
+            productsGrid.innerHTML = `<p>No cakes found for "${category}".</p>`;
+        } else {
+            productsGrid.innerHTML = filteredProducts.map(product => createProductCard(product, false)).join('');
+        }
     }
 }
 
