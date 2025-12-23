@@ -88,10 +88,21 @@ function loadCart() {
 
 // Product Functions
 function loadFeaturedProducts() {
-    const featuredProducts = products.filter(product => product.featured);
-    const featuredGrid = document.getElementById('featured-products');
+    // 1. Try to find the grid on the homepage
+    const featuredGrid = document.getElementById('featured-products-grid'); 
+    
+    // If we aren't on the homepage, stop the function so it doesn't error out
+    if (!featuredGrid) return; 
 
-    if (featuredGrid) {
+    // 2. Filter products that are marked as TRUE in your Supabase 'featured' column
+    const featuredProducts = products.filter(product => {
+        return product.featured === true || product.featured === 'true';
+    });
+
+    // 3. Put the cakes into the HTML
+    if (featuredProducts.length === 0) {
+        featuredGrid.innerHTML = '<p class="no-products">Our featured treats are coming soon!</p>';
+    } else {
         featuredGrid.innerHTML = featuredProducts.map(product => createProductCard(product, true)).join('');
     }
 }
