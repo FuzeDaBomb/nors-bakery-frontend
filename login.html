@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Nors Bakery</title>
+    <title>Login - Nors Bakery</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -54,20 +54,15 @@
             margin-top: 1rem;
             color: var(--destructive);
         }
-        .admin-note {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            color: var(--muted-foreground);
-        }
-        .back-link {
+        .signup-link {
             text-align: center;
             margin-top: 1rem;
             font-size: 0.9rem;
         }
-        .back-link a {
+        .signup-link a {
             color: var(--primary);
             text-decoration: none;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -84,18 +79,18 @@
     </header>
 
     <div class="login-container">
-        <h2>Admin Login</h2>
-        <form class="login-form" onsubmit="handleAdminLogin(event)">
+        <h2>Customer Login</h2>
+        <form class="login-form" onsubmit="handleUserLogin(event)">
             <input type="text" id="username" placeholder="Username" required>
             <input type="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
         <p id="message" class="message"></p>
-        <div class="admin-note">
-            Default admin: username=admin, password=bakery2025
+        <div class="signup-link">
+            Don't have an account? <a href="register.html">Sign up here</a>
         </div>
-        <div class="back-link">
-            <a href="login.html">Customer Login</a>
+        <div class="signup-link">
+            Admin? <a href="admin.html">Login as Admin</a>
         </div>
     </div>
 
@@ -104,7 +99,7 @@
           ? 'http://localhost:5000/api'
           : 'https://nors-bakery-backend.onrender.com/api';
 
-        async function handleAdminLogin(event) {
+        async function handleUserLogin(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
@@ -117,23 +112,17 @@
                     body: JSON.stringify({ username, password })
                 });
                 const data = await response.json();
-                if (data.success && data.user.role === 'admin') {
+                if (data.success) {
                     localStorage.setItem('currentUser', JSON.stringify(data.user));
-                    alert('Welcome back, Boss!');
-                    window.location.href = 'dashboard.html';
-                } else if (data.success) {
-                    document.getElementById('message').innerText = 'Admin access required';
+                    alert('Welcome ' + username + '!');
+                    window.location.href = 'products.html';
                 } else {
                     document.getElementById('message').innerText = data.message || 'Login failed';
                 }
             } catch (err) {
-                if (username === 'admin' && password === 'bakery2025') {
-                    localStorage.setItem('currentUser', JSON.stringify({ username: 'admin', role: 'admin' }));
-                    alert('Welcome back, Boss!');
-                    window.location.href = 'dashboard.html';
-                } else {
-                    document.getElementById('message').innerText = 'Wrong credentials';
-                }
+                document.getElementById('message').innerText = 'Connection error. Using local login.';
+                localStorage.setItem('currentUser', JSON.stringify({ username, role: 'user' }));
+                window.location.href = 'products.html';
             }
         }
     </script>

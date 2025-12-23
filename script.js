@@ -1,5 +1,7 @@
 // Product Data
-const API_URL = 'https://nors-bakery-backend.onrender.com/api';
+const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000/api'
+  : 'https://nors-bakery-backend.onrender.com/api';
 let products = [];
 
 // Global State

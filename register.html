@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Nors Bakery</title>
+    <title>Sign Up - Nors Bakery</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        .login-container {
+        .register-container {
             max-width: 400px;
             margin: 5rem auto;
             padding: 2rem;
@@ -15,28 +15,28 @@
             border-radius: 0.5rem;
             box-shadow: var(--shadow);
         }
-        .login-container h2 {
+        .register-container h2 {
             text-align: center;
             margin-bottom: 1.5rem;
             color: var(--foreground);
         }
-        .login-form {
+        .register-form {
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
-        .login-form input {
+        .register-form input {
             padding: 0.75rem;
             border: 2px solid var(--border);
             border-radius: 0.375rem;
             font-family: var(--font-sans);
             font-size: 1rem;
         }
-        .login-form input:focus {
+        .register-form input:focus {
             outline: none;
             border-color: var(--primary);
         }
-        .login-form button {
+        .register-form button {
             padding: 0.75rem 1rem;
             background: var(--primary);
             color: var(--primary-foreground);
@@ -46,7 +46,7 @@
             font-weight: 600;
             transition: opacity 0.2s;
         }
-        .login-form button:hover {
+        .register-form button:hover {
             opacity: 0.9;
         }
         .message {
@@ -54,20 +54,15 @@
             margin-top: 1rem;
             color: var(--destructive);
         }
-        .admin-note {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            color: var(--muted-foreground);
-        }
-        .back-link {
+        .login-link {
             text-align: center;
             margin-top: 1rem;
             font-size: 0.9rem;
         }
-        .back-link a {
+        .login-link a {
             color: var(--primary);
             text-decoration: none;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -83,19 +78,17 @@
         </div>
     </header>
 
-    <div class="login-container">
-        <h2>Admin Login</h2>
-        <form class="login-form" onsubmit="handleAdminLogin(event)">
+    <div class="register-container">
+        <h2>Create Account</h2>
+        <form class="register-form" onsubmit="handleRegister(event)">
             <input type="text" id="username" placeholder="Username" required>
+            <input type="email" id="email" placeholder="Email" required>
             <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <button type="submit">Sign Up</button>
         </form>
         <p id="message" class="message"></p>
-        <div class="admin-note">
-            Default admin: username=admin, password=bakery2025
-        </div>
-        <div class="back-link">
-            <a href="login.html">Customer Login</a>
+        <div class="login-link">
+            Already have an account? <a href="login.html">Login here</a>
         </div>
     </div>
 
@@ -104,36 +97,31 @@
           ? 'http://localhost:5000/api'
           : 'https://nors-bakery-backend.onrender.com/api';
 
-        async function handleAdminLogin(event) {
+        async function handleRegister(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
             try {
-                const response = await fetch(`${API_URL}/auth/login`, {
+                const response = await fetch(`${API_URL}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ username, email, password })
                 });
                 const data = await response.json();
-                if (data.success && data.user.role === 'admin') {
+                if (data.success) {
                     localStorage.setItem('currentUser', JSON.stringify(data.user));
-                    alert('Welcome back, Boss!');
-                    window.location.href = 'dashboard.html';
-                } else if (data.success) {
-                    document.getElementById('message').innerText = 'Admin access required';
+                    alert('Account created! Welcome ' + username + '!');
+                    window.location.href = 'products.html';
                 } else {
-                    document.getElementById('message').innerText = data.message || 'Login failed';
+                    document.getElementById('message').innerText = data.message || 'Registration failed';
                 }
             } catch (err) {
-                if (username === 'admin' && password === 'bakery2025') {
-                    localStorage.setItem('currentUser', JSON.stringify({ username: 'admin', role: 'admin' }));
-                    alert('Welcome back, Boss!');
-                    window.location.href = 'dashboard.html';
-                } else {
-                    document.getElementById('message').innerText = 'Wrong credentials';
-                }
+                document.getElementById('message').innerText = 'Connection error. Using local registration.';
+                localStorage.setItem('currentUser', JSON.stringify({ username, email, role: 'user' }));
+                window.location.href = 'products.html';
             }
         }
     </script>
