@@ -28,51 +28,33 @@ const quickActions = document.getElementById('quick-actions');
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    // Load cart from local storage
     loadCart();
 
-    // Get current page name
+    // 1. ALWAYS load products first, no matter what page we are on
+    // This fills the empty 'products' array with your Supabase data
+    loadProducts(); 
+
     const currentPage = getCurrentPage();
 
-    // Load content based on page
+    // 2. Handle page-specific logic
     if (currentPage === 'products') {
-        loadProducts();
-        // Check for URL category parameter
         const urlParams = new URLSearchParams(window.location.search);
         const category = urlParams.get('category');
         if (category) {
-            filterProducts(category);
+            currentCategory = category;
         }
-    } else if (currentPage === 'index' || currentPage === '') {
-        loadFeaturedProducts();
     }
 
     updateCartUI();
     
-    // Only set active nav if elements exist (checkout page might not have nav-desktop)
     if (document.querySelector('.nav-desktop')) {
         setActiveNavigation();
     }
     
-    // Only init chatbot if elements exist
     if (document.getElementById('chatbot-window')) {
         initializeChatbot();
     }
-
-    // Set default pickup date to tomorrow
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const pickupDateInput = document.getElementById('pickup-date');
-    if (pickupDateInput) {
-        pickupDateInput.min = tomorrow.toISOString().split('T')[0];
-        pickupDateInput.value = tomorrow.toISOString().split('T')[0];
-    }
 });
-
-// Persistence Functions
-function saveCart() {
-    localStorage.setItem('norsCart', JSON.stringify(cart));
-}
 
 function loadCart() {
     const savedCart = localStorage.getItem('norsCart');
@@ -89,7 +71,7 @@ function loadCart() {
 // Product Functions
 function loadFeaturedProducts() {
     // 1. Try to find the grid on the homepage
-    const featuredGrid = document.getElementById('featured-products-grid'); 
+    const featuredGrid = document.getElementById('featured-products'); 
     
     // If we aren't on the homepage, stop the function so it doesn't error out
     if (!featuredGrid) return; 
