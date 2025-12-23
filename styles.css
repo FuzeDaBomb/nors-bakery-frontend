@@ -16,10 +16,10 @@
     --secondary: hsl(127, 100%, 79%);
     --secondary-foreground: hsl(0, 19%, 15%);
     --muted: hsl(0, 22%, 90%);
-    --muted-foreground: hsl(0, 100%, 6%);
+    --muted-foreground: hsl(24, 10%, 40%);
     --accent: hsl(0, 0%, 90%);
     --accent-foreground: hsl(88, 96%, 89%);
-    --border: hsl(0, 0%, 100%);
+    --border: hsl(0, 0%, 82%);
     --input: hsl(45, 64%, 28%);
     --destructive: hsl(0, 0%, 100%);
     --destructive-foreground: hsla(42, 100%, 50%, 0.881);
@@ -1305,4 +1305,58 @@ select:focus {
     width: 90%;
     margin: 10px 0;
     padding: 8px;
+}
+
+/* --- Checkout Specific Polish --- */
+
+/* Step Numbers Enhancement */
+.step-circle {
+    background: linear-gradient(135deg, var(--primary) 0%, hsl(310, 100%, 70%) 100%) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Form Inputs within Checkout */
+.checkout-form-section .form-group input {
+    background: var(--background);
+    border: 1px solid #e2e8f0; /* Softer border than the global one */
+    transition: all 0.2s ease;
+}
+
+.checkout-form-section .form-group input:focus {
+    background: white;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px hsla(37, 100%, 68%, 0.2);
+}
+
+/* Order Summary Card Sticky behavior */
+.summary-card {
+    border: 1px solid var(--border);
+    position: sticky;
+    top: 6rem;
+}
+
+/* Grand Total Color */
+.grand-total span:last-child {
+    color: var(--input); /* Using your deep brown/primary for the final price */
+}
+
+/* Radio Option Styling */
+.radio-option {
+    background: var(--background);
+    border: 2px solid transparent;
+}
+
+.radio-option.selected {
+    border-color: var(--primary) !important;
+    background: white !important;
+}
+
+/* Address Fields Animation */
+#delivery-address-fields {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

@@ -384,115 +384,109 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="checkout.js"></script>
     <script>
         // Checkout Specific Logic
-        let deliveryCost = 0;
+        // Checkout Specific Logic
+let deliveryCost = 0;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            setTimeout(renderCheckoutItems, 100);
-            
-            // Date picker min date
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('pickup-date').min = tomorrow.toISOString().split('T')[0];
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure the cart is loaded from localStorage before rendering
+    if (typeof loadCart === 'function') {
+        loadCart();
+    }
+    
+    // Small delay to ensure script.js variables are initialized
+    setTimeout(renderCheckoutItems, 200);
+    
+    // Set min date for pickup
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateInput = document.getElementById('pickup-date');
+    if (dateInput) dateInput.min = tomorrow.toISOString().split('T')[0];
+});
 
-        function selectDelivery(type) {
-            const options = document.querySelectorAll('input[name="delivery"]');
-            options.forEach(opt => {
-                if (opt.value === type) {
-                    opt.checked = true;
-                    opt.closest('.radio-option').classList.add('selected');
-                } else {
-                    opt.closest('.radio-option').classList.remove('selected');
-                }
-            });
-
-            const addrFields = document.getElementById('delivery-address-fields');
-            const addrInput = document.getElementById('addr-input');
-
-            if (type === 'delivery') {
-                deliveryCost = 15.00;
-                addrFields.style.display = 'block';
-                addrInput.required = true;
-            } else {
-                deliveryCost = 0;
-                addrFields.style.display = 'none';
-                addrInput.required = false;
-            }
-            
-            updateCheckoutTotals();
+function selectDelivery(type) {
+    const options = document.querySelectorAll('input[name="delivery"]');
+    options.forEach(opt => {
+        const parent = opt.closest('.radio-option');
+        if (opt.value === type) {
+            opt.checked = true;
+            parent.classList.add('selected');
+        } else {
+            parent.classList.remove('selected');
         }
+    });
 
-        function selectPayment(type) {
-            const options = document.querySelectorAll('input[name="payment"]');
-            options.forEach(opt => {
-                if (opt.value === type) {
-                    opt.checked = true;
-                    opt.closest('.radio-option').classList.add('selected');
-                } else {
-                    opt.closest('.radio-option').classList.remove('selected');
-                }
-            });
+    const addrFields = document.getElementById('delivery-address-fields');
+    const addrInput = document.getElementById('addr-input');
 
-            const cardDetails = document.getElementById('card-payment-details');
-            if (type === 'card') {
-                cardDetails.style.display = 'block';
-            } else {
-                cardDetails.style.display = 'none';
-            }
+    if (type === 'delivery') {
+        deliveryCost = 15.00;
+        addrFields.style.display = 'block';
+        if (addrInput) addrInput.required = true;
+    } else {
+        deliveryCost = 0;
+        addrFields.style.display = 'none';
+        if (addrInput) addrInput.required = false;
+    }
+    
+    updateCheckoutTotals();
+}
+
+function renderCheckoutItems() {
+    const container = document.getElementById('checkout-items');
+    
+    if (!cart || cart.length === 0) {
+        container.innerHTML = '<p>Your cart is empty. <a href="products.html">Go shopping</a></p>';
+        updateCheckoutTotals();
+        return;
+    }
+
+    // FIXED: item.product.image_url matches your Supabase data
+    container.innerHTML = cart.map(item => `
+        <div class="summary-item">
+            <img src="${item.product.image_url}" alt="${item.product.name}" class="summary-img" onerror="this.src='https://via.placeholder.com/60'">
+            <div class="summary-details">
+                <h4>${item.product.name}</h4>
+                <div style="font-size: 0.8rem; color: var(--muted-foreground);">Qty: ${item.quantity}</div>
+            </div>
+            <div class="summary-price">RM ${(parseFloat(item.product.price) * item.quantity).toFixed(2)}</div>
+        </div>
+    `).join('');
+
+    updateCheckoutTotals();
+}
+
+function updateCheckoutTotals() {
+    const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.product.price) * item.quantity), 0);
+    const tax = subtotal * 0.06;
+    const total = subtotal + tax + deliveryCost;
+
+    document.getElementById('checkout-subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
+    document.getElementById('checkout-tax').textContent = `RM ${tax.toFixed(2)}`;
+    document.getElementById('checkout-shipping').textContent = deliveryCost === 0 ? 'Free' : `RM ${deliveryCost.toFixed(2)}`;
+    document.getElementById('checkout-total').textContent = `RM ${total.toFixed(2)}`;
+}
+
+function handleCheckoutSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = "Processing...";
+    btn.disabled = true;
+
+    setTimeout(() => {
+        alert("Order placed successfully! Thank you for choosing Nors Bakery.");
+        // Clear global cart and local storage
+        cart = [];
+        if (typeof saveCart === 'function') {
+            saveCart();
+        } else {
+            localStorage.removeItem('norsCart');
         }
-
-        function renderCheckoutItems() {
-            const container = document.getElementById('checkout-items');
-            
-            if (!cart || cart.length === 0) {
-                container.innerHTML = '<p>Your cart is empty. <a href="products.html">Go shopping</a></p>';
-                updateCheckoutTotals();
-                return;
-            }
-
-            container.innerHTML = cart.map(item => `
-                <div class="summary-item">
-                    <img src="${item.product.imageUrl}" alt="${item.product.name}" class="summary-img">
-                    <div class="summary-details">
-                        <h4>${item.product.name}</h4>
-                        <div style="font-size: 0.8rem; color: var(--muted-foreground);">Qty: ${item.quantity}</div>
-                    </div>
-                    <div class="summary-price">RM ${(item.product.price * item.quantity).toFixed(2)}</div>
-                </div>
-            `).join('');
-
-            updateCheckoutTotals();
-        }
-
-        function updateCheckoutTotals() {
-            const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.product.price) * item.quantity), 0);
-            const tax = subtotal * 0.06;
-            const total = subtotal + tax + deliveryCost;
-
-            document.getElementById('checkout-subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
-            document.getElementById('checkout-tax').textContent = `RM ${tax.toFixed(2)}`;
-            document.getElementById('checkout-shipping').textContent = deliveryCost === 0 ? 'Free' : `RM ${deliveryCost.toFixed(2)}`;
-            document.getElementById('checkout-total').textContent = `RM ${total.toFixed(2)}`;
-        }
-
-        function handleCheckoutSubmit(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.textContent = "Processing...";
-            btn.disabled = true;
-
-            setTimeout(() => {
-                alert("Order placed successfully! Thank you for choosing Nors Bakery.");
-                // Clear cart
-                cart = [];
-                localStorage.removeItem('norsCart');
-                window.location.href = 'index.html';
-            }, 2000);
-        }
+        window.location.href = 'index.html';
+    }, 2000);
+}
     </script>
 </body>
 </html>

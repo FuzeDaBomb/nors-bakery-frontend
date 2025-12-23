@@ -68,6 +68,12 @@ function loadCart() {
     }
 }
 
+function saveCart() {
+    // This saves your cart array into the browser's local storage
+    // so the items stay there even if you refresh the page
+    localStorage.setItem('norsCart', JSON.stringify(cart));
+}
+
 // Product Functions
 function loadFeaturedProducts() {
     // 1. Try to find the grid on the homepage
