@@ -123,12 +123,13 @@ function filterProducts(category) {
     if (activeBtn) activeBtn.classList.add('active');
 
     // THE FIX: Check for exact matches with your Supabase data
-    const filteredProducts = category === 'all'
-        ? products
-        : products.filter(product => {
-            // This handles both lowercase and uppercase mismatches
-            return product.category.trim().toLowerCase() === category.trim().toLowerCase();
-        });
+    const filteredProducts = (category === 'all' || !category)
+    ? products
+    : products.filter(product => {
+        if (!product.category) return false;
+        // This makes sure 'Wedding Cake' matches 'wedding cake' regardless of spaces
+        return product.category.toString().toLowerCase().trim() === category.toLowerCase().trim();
+    });
 
     const productsGrid = document.getElementById('products-grid');
     if (productsGrid) {
