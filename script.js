@@ -1,7 +1,7 @@
 // Product Data
 const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
   ? 'http://localhost:5000/api'
-  : 'https://nors-bakery-backend.onrender.com/api';
+  : 'https://nors-bakery-backend.onrender.com';
 let products = [];
 
 // Global State
@@ -140,7 +140,7 @@ function filterProducts(category) {
 function createProductCard(product, featured = false) {
     const cardClass = featured ? 'product-card featured hover-lift' : 'product-card hover-lift';
     
-const imagePath = `./${product.image_url}`;
+const imagePath = product.image_url;
 
     return `
         <div class="${cardClass}">
