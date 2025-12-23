@@ -104,10 +104,11 @@ async function loadProducts() {
 
     try {
         const response = await fetch(`${API_URL}/products`);
-        products = await response.json(); // Save the live data into our global products variable
+        products = await response.json(); 
         
-        // Now that we have the data, show it
+        // >>> ADD THESE TWO LINES HERE <<<
         filterProducts(currentCategory); 
+        loadFeaturedProducts(); 
     } catch (error) {
         console.error("Error loading products:", error);
         if (productsGrid) {
