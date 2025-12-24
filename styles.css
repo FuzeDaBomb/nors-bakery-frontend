@@ -903,7 +903,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 24px;
     border-radius: 50%;
     border: 1px solid var(--primary);
-    background: white;
+    background: rgb(255, 191, 0);
     color: var(--primary-foreground);
     display: flex;
     align-items: center;

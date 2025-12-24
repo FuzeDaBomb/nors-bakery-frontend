@@ -2,28 +2,202 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bakery Price Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Bakery Price Manager</h1>
-        <div class="login-container">
-            <input type="text" id="itemName" placeholder="Cake Name (e.g. Three Layered Cake)">
-            <input type="number" id="newPrice" placeholder="New Price (e.g. 50)">
-            <button onclick="updatePrice()">Update Price</button>
-            <p id="status"></p>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="home.html" class="logo">
+                    <span class="logo-icon"><img src="Gambars/logo2.jpg" alt="Logo" /></span>
+                    <h1>Nors Bakery</h1>
+                </a>
+                <nav class="nav-desktop">
+                    <a href="home.html">Home</a>
+                    <a href="products.html">Products</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="cart-btn" onclick="toggleCart()">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </button>
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <span class="hamburger" id="hamburger">☰</span>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-menu" id="mobile-menu">
+                <nav class="nav-mobile">
+                    <a href="home.html" onclick="closeMobileMenu()">Home</a>
+                    <a href="products.html" onclick="closeMobileMenu()">Products</a>
+                    <a href="about.html" onclick="closeMobileMenu()">About</a>
+                    <a href="contact.html" onclick="closeMobileMenu()">Contact</a>
+                </nav>
+            </div>
         </div>
-        <br>
-        <a href="index.html">View Public Site</a>
+    </header>
+
+    <div class="container" style="min-height: 60vh; padding-top: 4rem; padding-bottom: 4rem;">
+        <h1 class="section-title">Bakery Price Manager</h1>
+        <div class="login-container" style="max-width: 500px; margin: 0 auto; background: var(--card); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow);">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Cake Name</label>
+                <input type="text" id="itemName" placeholder="e.g. Three Layered Cake" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--border-radius);">
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">New Price</label>
+                <input type="number" id="newPrice" placeholder="e.g. 50" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--border-radius);">
+            </div>
+            <button onclick="updatePrice()" class="btn btn-primary btn-full">Update Price</button>
+            <p id="status" style="margin-top: 1rem; text-align: center; font-weight: 600; min-height: 1.5rem;"></p>
+        </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span class="logo-icon"><img src="Gambars/logo2.jpg" alt="Logo" /></span>
+                        <h3>Nors Bakery</h3>
+                    </div>
+                    <p class="footer-description">
+                        Baking fresh happiness since 2012.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html?category=Wedding Cake">Wedding cake</a></li>
+                        <li><a href="products.html?category=Custom Cakes">Custom Cakes</a></li>
+                        <li><a href="products.html?category=Birthday Cake">Birthday Cake</a></li>
+                        <li><a href="contact.html">Special Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="footer-contact">
+                        <p>📍 Nors bakery</p>
+                        <p>📞 011234567</p>
+                        <p>✉️ Nors@bakery.com.my</p>
+                        <p>🕒 operation hours 8am-10pm</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Nors Bakery. All rights reserved. | Made with ♥ for our community</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3 class="cart-title">Shopping Cart</h3>
+            <button class="cart-close" onclick="closeCart()">✕</button>
+        </div>
+        <div class="cart-content" id="cart-content">
+            <div class="cart-empty" id="cart-empty">
+                <div class="cart-empty-icon">🛒</div>
+                <p>Your cart is empty</p>
+            </div>
+            <div class="cart-items" id="cart-items"></div>
+        </div>
+        <div class="cart-footer" id="cart-footer" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="cart-total-amount" id="cart-total">$0.00</span>
+            </div>
+            <div class="cart-actions">
+                <button class="btn btn-primary btn-full" onclick="checkout()">
+                    Proceed to Checkout
+                </button>
+                <button class="btn btn-outline btn-full" onclick="clearCart()">
+                    Clear Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot">
+        <button class="chatbot-toggle" onclick="toggleChatbot()">
+            💬
+        </button>
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <div class="chatbot-header-info">
+                    <span class="chatbot-icon">🤖</span>
+                    <h4>Chat Bot</h4>
+                </div>
+                <button class="chatbot-close" onclick="closeChatbot()">✕</button>
+            </div>
+            <p class="chatbot-subtitle">How can I help you today?</p>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="message bot-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Hello! I'm here to help you with our bakery products. What would you like to know?</p>
+                    </div>
+                </div>
+                <div class="quick-actions" id="quick-actions">
+                    <button class="quick-action" onclick="sendQuickAction('hours')">
+                        🕒 Store Hours
+                    </button>
+                    <button class="quick-action" onclick="sendQuickAction('specials')">
+                        🎂 Today's Specials
+                    </button>
+                    <button class="quick-action" onclick="sendQuickAction('orders')">
+                        📋 Custom Orders
+                    </button>
+                    <button class="quick-action" onclick="sendQuickAction('location')">
+                        📍 Location & Directions
+                    </button>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input-field" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)">
+                <button onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
     <script>
         async function updatePrice() {
             const name = document.getElementById('itemName').value;
             const price = document.getElementById('newPrice').value;
             const statusLabel = document.getElementById('status');
 
+            if (!name || !price) {
+                statusLabel.style.color = "red";
+                statusLabel.innerText = "Please fill in all fields";
+                return;
+            }
+
+            statusLabel.style.color = "var(--primary)";
             statusLabel.innerText = "Updating...";
 
             try {
@@ -43,6 +217,7 @@
                     statusLabel.innerText = "Error: " + data.message;
                 }
             } catch (error) {
+                statusLabel.style.color = "red";
                 statusLabel.innerText = "Could not connect to server.";
                 console.error("Error:", error);
             }
