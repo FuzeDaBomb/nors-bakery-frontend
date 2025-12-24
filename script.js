@@ -264,15 +264,15 @@ function createCartItem(item) {
                  alt="${item.product.name}" 
                  class="cart-item-image">
             <div class="cart-item-info">
-                <h4>${item.product.name}</h4>
-                <p>RM${parseFloat(item.product.price).toFixed(2)}</p>
+                <h4 class="cart-item-name">${item.product.name}</h4>
+                <p class="cart-item-price">RM${parseFloat(item.product.price).toFixed(2)}</p>
                 <div class="cart-item-controls">
-                    <button onclick="updateCartQuantity('${item.productId}', ${item.quantity - 1})">-</button>
-                    <span>${item.quantity}</span>
-                    <button onclick="updateCartQuantity('${item.productId}', ${item.quantity + 1})">+</button>
+                    <button class="quantity-btn" onclick="updateCartQuantity('${item.productId}', ${item.quantity - 1})">−</button>
+                    <span class="cart-item-quantity">${item.quantity}</span>
+                    <button class="quantity-btn" onclick="updateCartQuantity('${item.productId}', ${item.quantity + 1})">+</button>
                 </div>
             </div>
-            <button class="remove-item" onclick="removeFromCart('${item.productId}')">×</button>
+            <button class="cart-close" onclick="removeFromCart('${item.productId}')">×</button>
         </div>
     `;
 }

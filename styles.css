@@ -889,37 +889,58 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--muted-foreground);
 }
 
+/* Cart Item Controls Styling */
 .cart-item-controls {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
 }
 
+/* Make the + and - buttons circular and match your theme */
 .quantity-btn {
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 1px solid var(--border);
-    background: var(--card);
-    border-radius: 0.25rem;
-    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--primary);
+    background: white;
+    color: var(--primary-foreground);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
     transition: all 0.2s ease;
+    padding: 0;
 }
 
 .quantity-btn:hover {
-    background: var(--accent);
-    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+/* Style for the 'X' remove button */
+.cart-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.cart-close:hover {
+    color: #ef4444; /* Turns red on hover */
+    transform: scale(1.1);
 }
 
 .cart-item-quantity {
-    font-size: 0.875rem;
     font-weight: 600;
-    width: 2rem;
+    min-width: 20px;
     text-align: center;
-    color: var(--foreground);
 }
 
 .cart-footer {
