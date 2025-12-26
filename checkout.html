@@ -178,6 +178,10 @@
         .radio-option, .form-group input, .section-header-checkout, .summary-item, .grand-total, #card-payment-details {
             border-color: var(--border-visible); 
         }
+        /* Hide the cart button only on this page */
+.header-actions .cart-btn {
+    display: none !important;
+}
     </style>
 </head>
 <body>
@@ -472,18 +476,31 @@ function updateCheckoutTotals() {
 function handleCheckoutSubmit(e) {
     e.preventDefault();
     const btn = e.target.querySelector('button[type="submit"]');
+    
+    // 1. UI Feedback
     btn.textContent = "Processing...";
     btn.disabled = true;
 
+    // Simulate a brief delay for processing
     setTimeout(() => {
         alert("Order placed successfully! Thank you for choosing Nors Bakery.");
-        // Clear global cart and local storage
-        cart = [];
-        if (typeof saveCart === 'function') {
-            saveCart();
-        } else {
-            localStorage.removeItem('norsCart');
+
+        // 2. Clear the cart in memory
+        if (typeof cart !== 'undefined') {
+            cart = []; 
         }
+
+        // 3. Clear the browser storage permanently
+        localStorage.removeItem('norsCart');
+
+        // 4. Update the Header Cart Count immediately
+        const headerCount = document.getElementById('cart-count-header');
+        if (headerCount) {
+            headerCount.textContent = '0';
+            headerCount.style.display = 'none';
+        }
+
+        // 5. Redirect back to home
         window.location.href = 'index.html';
     }, 2000);
 }

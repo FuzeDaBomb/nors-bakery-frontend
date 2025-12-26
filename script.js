@@ -62,15 +62,17 @@ const chatbotMessages = document.getElementById('chatbot-messages');
 const quickActions = document.getElementById('quick-actions');
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', async function() { // Added 'async' here
+document.addEventListener('DOMContentLoaded', async function() {
+    // 1. Initialize core data
     loadCart();
-    loadProducts(); 
+    await loadProducts(); 
 
-    // --- ADD THIS AUTH CHECK HERE ---
+    // 2. Get session and define currentUser
     const { data: { session } } = await supabase.auth.getSession();
+    const currentUser = session?.user || null; // This was the missing piece!
+
     if (session) {
         console.log("Logged in as:", session.user.email);
-        // You can add code here later to show the user's name on screen
     }
 
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -79,16 +81,11 @@ document.addEventListener('DOMContentLoaded', async function() { // Added 'async
 
     const currentPage = getCurrentPage();
 
-    // --- PROFILE PAGE DATA FILLING ---
+    // 3. Profile Page Logic
     if (currentPage === 'profile') {
-        const { data: { session } } = await supabase.auth.getSession();
-        const currentUser = session?.user || null;
-
         if (!currentUser) {
-            // If someone tries to visit profile.html without logging in, send them to login
             window.location.href = 'login.html';
         } else {
-            // Fill the spans in your profile.html with real data
             const nameSpan = document.getElementById('user-display-name');
             const emailSpan = document.getElementById('user-email');
             const joinedSpan = document.getElementById('user-joined');
@@ -98,21 +95,21 @@ document.addEventListener('DOMContentLoaded', async function() { // Added 'async
             if (joinedSpan) joinedSpan.textContent = new Date(currentUser.created_at).toLocaleDateString();
         }
     }
-    // 2. Handle page-specific logic
+
+    // 4. Products Page Logic
     if (currentPage === 'products') {
         const urlParams = new URLSearchParams(window.location.search);
-        const category = urlParams.get('category');
-        if (category) {
-            currentCategory = category;
-        }
+        const category = urlParams.get('category') || 'all';
+        filterProducts(category);
     }
 
+    // 5. Update UI components
     updateCartUI();
     
     if (document.querySelector('.nav-desktop')) {
         setActiveNavigation();
     }
-    
+
     if (document.getElementById('chatbot-window')) {
         initializeChatbot();
     }
@@ -617,3 +614,11 @@ window.checkout = checkout;
 window.sendMessage = sendMessage;
 window.toggleChatbot = toggleChatbot;
 window.sendQuickAction = sendQuickAction;
+window.logout = window.logout;
+// Add these to the existing window assignments at the bottom of script.js
+window.toggleMobileMenu = toggleMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
+window.closeCart = closeCart;
+window.toggleChatbot = toggleChatbot;
+window.closeChatbot = closeChatbot;
+window.clearCart = clearCart; // Add this line!

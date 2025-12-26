@@ -63,7 +63,8 @@ function loadCart() {
 
 // Product Functions
 function loadFeaturedProducts() {
-    const featuredProducts = products.filter(product => product.featured);
+    // This ensures it catches the 'true' value from Supabase
+    const featuredProducts = products.filter(product => product.featured === true);
     const featuredGrid = document.getElementById('featured-products');
 
     if (featuredGrid) {
@@ -134,7 +135,7 @@ function createProductCard(product, featured = false) {
 
 // Cart Functions
 function addToCart(productId, quantity = 1) {
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => p.id == productId); 
     if (!product) return;
 
     const existingItem = cart.find(item => item.productId === productId);
@@ -336,3 +337,34 @@ function sendMessage() {
 function sendQuickAction(action) {
     // Mock action
 }
+
+window.clearCart = clearCart;
+
+// Add this to the very end of checkout.js
+window.onload = () => {
+    // 1. Initialize cart UI immediately
+    updateCartUI();
+
+    // 2. Check if we are on the Home Page and load products
+    const featuredGrid = document.getElementById('featured-products');
+    if (featuredGrid) {
+        loadFeaturedProducts();
+    }
+
+    // 3. Check if we are on the Products Page
+    const productsGrid = document.getElementById('products-grid');
+    if (productsGrid) {
+        loadProducts();
+    }
+};
+
+// Add this to the very end of checkout.js if it's not there
+document.addEventListener('DOMContentLoaded', () => {
+    // This runs after the fetch in your existing DOMContentLoaded listener
+    setTimeout(() => {
+        if (document.getElementById('featured-products')) {
+            loadFeaturedProducts();
+        }
+        updateCartUI();
+    }, 500); // Small delay to ensure database fetch finishes
+});
