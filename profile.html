@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Nors Bakery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav-desktop">
+                <a href="index.html">Home</a>
+                <a href="products.html">Products</a>
+                <button onclick="window.logout()" class="btn">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 100px;">
+        <div class="profile-card">
+            <h2>Welcome back, <span id="user-display-name">Guest</span>!</h2>
+            <p><strong>Email:</strong> <span id="user-email">Not found</span></p>
+            <p><strong>Member Since:</strong> <span id="user-joined">Unknown</span></p>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

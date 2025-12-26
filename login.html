@@ -80,8 +80,8 @@
 
     <div class="login-container">
         <h2>Customer Login</h2>
-        <form class="login-form" onsubmit="handleUserLogin(event)">
-            <input type="text" id="username" placeholder="Username" required>
+        <form class="login-form" onsubmit="event.preventDefault(); window.login(document.getElementById('email').value, document.getElementById('password').value)">
+            <input type="email" id="email" placeholder="Email Address" required>
             <input type="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
@@ -93,38 +93,6 @@
             Admin? <a href="admin.html">Login as Admin</a>
         </div>
     </div>
-
-    <script>
-        const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-          ? 'http://localhost:5000/api'
-          : 'https://nors-bakery-backend.onrender.com/api';
-
-        async function handleUserLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            try {
-                const response = await fetch(`${API_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await response.json();
-                if (data.success) {
-                    localStorage.setItem('currentUser', JSON.stringify(data.user));
-                    alert('Welcome ' + username + '!');
-                    window.location.href = 'products.html';
-                } else {
-                    document.getElementById('message').innerText = data.message || 'Login failed';
-                }
-            } catch (err) {
-                document.getElementById('message').innerText = 'Connection error. Using local login.';
-                localStorage.setItem('currentUser', JSON.stringify({ username, role: 'user' }));
-                window.location.href = 'products.html';
-            }
-        }
-    </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

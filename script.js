@@ -1,3 +1,8 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+// It must start with https:// and end with .supabase.co
+const supabase = createClient('https://kvgongvthegnvavswzvm.supabase.co', 'sb_publishable_jSl4sfOozbfNKYunsvNRZA_hF_ve8t8');
+
 // Product Data
 const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
   ? 'http://localhost:5000/api'
@@ -9,6 +14,36 @@ let cart = [];
 let currentCategory = 'all';
 let chatMessages = [];
 let chatbotOpen = false;
+
+// --- AUTH FUNCTIONS ---
+window.signUp = async (email, password, fullName) => {
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: { data: { full_name: fullName } }
+    });
+
+    const messageElement = document.getElementById('message'); // Matches your HTML ID
+
+    if (error) {
+        if (messageElement) messageElement.innerText = "Error: " + error.message;
+        else alert("Error: " + error.message);
+    } else {
+        alert("Success! Check your email.");
+        window.location.href = 'login.html';
+    }
+};
+
+window.login = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) alert("Login failed: " + error.message);
+    else window.location.href = 'index.html';
+};
+
+window.logout = async () => {
+    await supabase.auth.signOut();
+    window.location.reload();
+};
 
 // DOM Elements
 const cartOverlay = document.getElementById('cart-overlay');
@@ -27,15 +62,42 @@ const chatbotMessages = document.getElementById('chatbot-messages');
 const quickActions = document.getElementById('quick-actions');
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() { // Added 'async' here
     loadCart();
-
-    // 1. ALWAYS load products first, no matter what page we are on
-    // This fills the empty 'products' array with your Supabase data
     loadProducts(); 
+
+    // --- ADD THIS AUTH CHECK HERE ---
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+        console.log("Logged in as:", session.user.email);
+        // You can add code here later to show the user's name on screen
+    }
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+        if (!session) console.log("User signed out");
+    });
 
     const currentPage = getCurrentPage();
 
+    // --- PROFILE PAGE DATA FILLING ---
+    if (currentPage === 'profile') {
+        const { data: { session } } = await supabase.auth.getSession();
+        const currentUser = session?.user || null;
+
+        if (!currentUser) {
+            // If someone tries to visit profile.html without logging in, send them to login
+            window.location.href = 'login.html';
+        } else {
+            // Fill the spans in your profile.html with real data
+            const nameSpan = document.getElementById('user-display-name');
+            const emailSpan = document.getElementById('user-email');
+            const joinedSpan = document.getElementById('user-joined');
+
+            if (nameSpan) nameSpan.textContent = currentUser.user_metadata.full_name || "Valued Customer";
+            if (emailSpan) emailSpan.textContent = currentUser.email;
+            if (joinedSpan) joinedSpan.textContent = new Date(currentUser.created_at).toLocaleDateString();
+        }
+    }
     // 2. Handle page-specific logic
     if (currentPage === 'products') {
         const urlParams = new URLSearchParams(window.location.search);
@@ -544,3 +606,14 @@ function handleChatKeyPress(event) {
         sendMessage();
     }
 }
+
+// Add these to the very end so your HTML can see them
+window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.filterProducts = filterProducts;
+window.updateCartQuantity = updateCartQuantity;
+window.removeFromCart = removeFromCart;
+window.checkout = checkout;
+window.sendMessage = sendMessage;
+window.toggleChatbot = toggleChatbot;
+window.sendQuickAction = sendQuickAction;
