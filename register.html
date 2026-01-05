@@ -80,12 +80,12 @@
 
     <div class="register-container">
         <h2>Create Account</h2>
-        <form class="register-form" onsubmit="event.preventDefault(); window.signUp(document.getElementById('reg-email').value, document.getElementById('reg-password').value, document.getElementById('reg-fullname').value)">
-            <input type="text" id="reg-fullname" placeholder="Full Name" required>
-            <input type="email" id="reg-email" placeholder="Email Address" required>
-            <input type="password" id="reg-password" placeholder="Password" required>
-            <button type="submit">Sign Up</button>
-        </form>
+        <form class="register-form" onsubmit="window.signUp(event)">
+    <input type="text" id="reg-fullname" placeholder="Full Name" required>
+    <input type="email" id="reg-email" placeholder="Email Address" required>
+    <input type="password" id="reg-password" placeholder="Password" required>
+    <button type="submit">Sign Up</button>
+</form>
         <p id="message" class="message"></p>
         <div class="login-link">
             Already have an account? <a href="login.html">Login here</a>

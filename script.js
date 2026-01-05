@@ -16,33 +16,61 @@ let chatMessages = [];
 let chatbotOpen = false;
 
 // --- AUTH FUNCTIONS ---
-window.signUp = async (email, password, fullName) => {
+window.signUp = async (event) => {
+    event.preventDefault(); // This stops the page from refreshing
+    
+    // 1. Grab values using the specific IDs from your register.html
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    const fullName = document.getElementById('reg-fullname').value;
+    const messageElement = document.getElementById('message');
+
+    console.log("Registering user:", email);
+
+    // 2. Send to Supabase
     const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
-        options: { data: { full_name: fullName } }
+        options: { 
+            data: { full_name: fullName } 
+        }
     });
 
-    const messageElement = document.getElementById('message'); // Matches your HTML ID
-
     if (error) {
-        if (messageElement) messageElement.innerText = "Error: " + error.message;
-        else alert("Error: " + error.message);
+        messageElement.innerText = "Error: " + error.message;
+        messageElement.style.color = "red";
     } else {
-        alert("Success! Check your email.");
+        alert("Success! Account created.");
         window.location.href = 'login.html';
     }
 };
 
-window.login = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) alert("Login failed: " + error.message);
-    else window.location.href = 'index.html';
-};
+window.login = async (event) => {
+    event.preventDefault(); // Stop page from refreshing
+    
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const messageElement = document.getElementById('message');
 
-window.logout = async () => {
-    await supabase.auth.signOut();
-    window.location.reload();
+    console.log("Attempting login for:", email);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        if (messageElement) {
+            messageElement.innerText = "Login failed: " + error.message;
+            messageElement.style.color = "red";
+        } else {
+            alert("Login failed: " + error.message);
+        }
+    } else {
+        console.log("Login successful!");
+        // Redirect to profile page after success
+        window.location.href = 'profile.html';
+    }
 };
 
 // DOM Elements
@@ -81,20 +109,26 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const currentPage = getCurrentPage();
 
-    // 3. Profile Page Logic
-    if (currentPage === 'profile') {
-        if (!currentUser) {
-            window.location.href = 'login.html';
-        } else {
-            const nameSpan = document.getElementById('user-display-name');
-            const emailSpan = document.getElementById('user-email');
-            const joinedSpan = document.getElementById('user-joined');
+// 3. Profile Page Logic
+if (currentPage === 'profile') {
+    if (!currentUser) {
+        window.location.href = 'login.html';
+    } else {
+        const nameSpan = document.getElementById('user-display-name');
+        const emailSpan = document.getElementById('user-email');
+        const joinedSpan = document.getElementById('user-joined');
 
-            if (nameSpan) nameSpan.textContent = currentUser.user_metadata.full_name || "Valued Customer";
-            if (emailSpan) emailSpan.textContent = currentUser.email;
-            if (joinedSpan) joinedSpan.textContent = new Date(currentUser.created_at).toLocaleDateString();
+        // FIXED: Fallback to email if full_name is missing
+        if (nameSpan) {
+            nameSpan.textContent = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
         }
+        if (emailSpan) emailSpan.textContent = currentUser.email;
+        if (joinedSpan) joinedSpan.textContent = new Date(currentUser.created_at).toLocaleDateString();
+        
+        // ADD THIS: Load the orders for this specific user
+        loadUserOrders(currentUser.id);
     }
+}
 
     // 4. Products Page Logic
     if (currentPage === 'products') {
@@ -601,6 +635,33 @@ function createChatMessage(message) {
 function handleChatKeyPress(event) {
     if (event.key === 'Enter') {
         sendMessage();
+    }
+}
+
+async function loadUserOrders(userId) {
+    const orderList = document.getElementById('order-list'); // Make sure this ID exists in profile.html
+    if (!orderList) return;
+
+    const { data: orders, error } = await supabase
+        .from('transactions')
+        .select('*')
+        .eq('user_id', userId);
+
+    if (error) {
+        orderList.innerHTML = "<p>Error loading orders.</p>";
+        return;
+    }
+
+    if (orders.length === 0) {
+        orderList.innerHTML = "<p>No orders yet. Go get some cake!</p>";
+    } else {
+        orderList.innerHTML = orders.map(order => `
+            <div class="order-card">
+                <p><strong>Item:</strong> ${order.name}</p>
+                <p><strong>Price:</strong> RM${parseFloat(order.price).toFixed(2)}</p>
+                <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
+            </div>
+        `).join('');
     }
 }
 
