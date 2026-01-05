@@ -17,22 +17,16 @@ let chatbotOpen = false;
 
 // --- AUTH FUNCTIONS ---
 window.signUp = async (event) => {
-    event.preventDefault(); // This stops the page from refreshing
-    
-    // 1. Grab values using the specific IDs from your register.html
+    event.preventDefault();
     const email = document.getElementById('reg-email').value;
     const password = document.getElementById('reg-password').value;
     const fullName = document.getElementById('reg-fullname').value;
-    const messageElement = document.getElementById('message');
 
-    console.log("Registering user:", email);
-
-    // 2. Send to Supabase
     const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: { 
-            data: { full_name: fullName } 
+        email,
+        password,
+        options: {
+            data: { full_name: fullName, role: 'customer' } // Saves 'customer' by default
         }
     });
 
