@@ -193,15 +193,28 @@ async function loadProducts() {
 
     try {
         const response = await fetch(`${API_URL}/products`);
+        
+        // CHECK 1: Did the server actually respond correctly?
+        if (!response.ok) {
+            throw new Error(`Server returned status ${response.status}`);
+        }
+
+        // CHECK 2: Try to parse JSON safely
         products = await response.json(); 
         
-        // >>> ADD THESE TWO LINES HERE <<<
+        console.log("Products loaded successfully:", products);
+        
         filterProducts(currentCategory); 
         loadFeaturedProducts(); 
     } catch (error) {
-        console.error("Error loading products:", error);
+        console.error("Critical Error loading products:", error);
         if (productsGrid) {
-            productsGrid.innerHTML = '<p>Error loading products. Check your connection!</p>';
+            productsGrid.innerHTML = `
+                <div class="error-state">
+                    <p>⚠️ Cannot connect to the bakery kitchen.</p>
+                    <small>Error: ${error.message}</small>
+                    <button onclick="location.reload()" class="btn btn-outline">Try Again</button>
+                </div>`;
         }
     }
 }
@@ -672,7 +685,6 @@ window.checkout = checkout;
 window.sendMessage = sendMessage;
 window.toggleChatbot = toggleChatbot;
 window.sendQuickAction = sendQuickAction;
-window.logout = window.logout;
 // Add these to the existing window assignments at the bottom of script.js
 window.toggleMobileMenu = toggleMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
