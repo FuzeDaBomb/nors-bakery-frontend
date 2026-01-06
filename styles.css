@@ -440,7 +440,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .add-to-cart-btn {
     padding: 0.5rem 1rem;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, hsl(310, 100%, 70%) 100%);
     color: var(--primary-foreground);
     border: none;
     border-radius: var(--border-radius);
@@ -450,14 +450,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .add-to-cart-btn:hover {
-    background: hsl(38, 90%, 45%);
+    background: linear-gradient(135deg, var(--primary) 0%, hsl(0, 100%, 70%) 100%);
     transform: translateY(-1px);
     box-shadow: var(--shadow);
 }
 
 .add-to-cart-btn.featured {
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, var(--primary) 0%, hsl(45, 80%, 60%) 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, hsl(310, 100%, 70%) 100%);
 }
 
 .add-to-cart-btn.icon-only {

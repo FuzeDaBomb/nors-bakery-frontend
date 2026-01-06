@@ -5,7 +5,7 @@ const supabase = createClient('https://kvgongvthegnvavswzvm.supabase.co', 'sb_pu
 
 // Product Data
 const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-  ? 'http://localhost:5000/api'
+  ? 'http://localhost:5000'
   : 'https://nors-bakery-backend.onrender.com';
 let products = [];
 
@@ -253,7 +253,7 @@ const imagePath = product.image_url;
                 <div class="product-footer">
                     <span class="product-price">RM${parseFloat(product.price).toFixed(2)}</span>
                     <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">
-                        ${featured ? 'Add to Cart' : '+'}
+                        ${featured ? 'Add to Cart' : 'Add to Cart'}
                     </button>
                 </div>
             </div>
