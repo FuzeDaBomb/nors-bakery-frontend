@@ -22,20 +22,23 @@ window.signUp = async (event) => {
     const password = document.getElementById('reg-password').value;
     const fullName = document.getElementById('reg-fullname').value;
 
-    const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-            data: { full_name: fullName, role: 'customer' } // Saves 'customer' by default
-        }
-    });
+    // 1. Create account in Supabase
+    const { data, error } = await supabase.auth.signUp({ email, password });
 
-    if (error) {
-        messageElement.innerText = "Error: " + error.message;
-        messageElement.style.color = "red";
-    } else {
-        alert("Success! Account created.");
-        window.location.href = 'login.html';
+    if (error) return alert(error.message);
+
+    if (data.user) {
+        // 2. Sync to your Render Backend
+        await fetch('https://nors-bakery-backend.onrender.com/register-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: data.user.id,
+                email: email,
+                full_name: fullName
+            })
+        });
+        alert("Registration successful! Check your email for a confirmation link.");
     }
 };
 
@@ -677,3 +680,32 @@ window.closeCart = closeCart;
 window.toggleChatbot = toggleChatbot;
 window.closeChatbot = closeChatbot;
 window.clearCart = clearCart; // Add this line!
+
+function selectPayment(type) {
+    // Update radio option styles
+    const options = document.querySelectorAll('input[name="payment"]');
+    options.forEach(opt => {
+        const parent = opt.closest('.radio-option');
+        if (opt.value === type) {
+            opt.checked = true;
+            parent.classList.add('selected');
+        } else {
+            parent.classList.remove('selected');
+        }
+    });
+
+    // Toggle detail views
+    const cardFields = document.getElementById('card-fields');
+    const alipayQR = document.getElementById('alipay-qr');
+
+    if (type === 'card') {
+        cardFields.style.display = 'block';
+        alipayQR.style.display = 'none';
+    } else if (type === 'alipay') {
+        cardFields.style.display = 'none';
+        alipayQR.style.display = 'block';
+    } else {
+        cardFields.style.display = 'none';
+        alipayQR.style.display = 'none';
+    }
+}

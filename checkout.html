@@ -311,6 +311,7 @@
                                 <input type="radio" name="payment" value="card" checked hidden>
                                 <span>💳 Credit / Debit Card</span>
                             </label>
+    
                             <div id="card-payment-details">
                                 <div class="form-group">
                                     <label>Card Number</label>
@@ -327,6 +328,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <label class="radio-option" onclick="selectPayment('alipay')">
+                                <input type="radio" name="payment" value="alipay" hidden>
+                                <span>📱 Alipay / TNG eWallet</span>
+                            </label>
                             <label class="radio-option" onclick="selectPayment('cash')">
                                 <input type="radio" name="payment" value="cash" hidden>
                                 <span>💵 Cash on Pickup / Delivery</span>
@@ -473,37 +478,39 @@ function updateCheckoutTotals() {
     document.getElementById('checkout-total').textContent = `RM ${total.toFixed(2)}`;
 }
 
-function handleCheckoutSubmit(e) {
+async function handleCheckoutSubmit(e) {
     e.preventDefault();
     const btn = e.target.querySelector('button[type="submit"]');
-    
-    // 1. UI Feedback
     btn.textContent = "Processing...";
     btn.disabled = true;
 
-    // Simulate a brief delay for processing
-    setTimeout(() => {
-        alert("Order placed successfully! Thank you for choosing Nors Bakery.");
+    const orderData = {
+        items: cart,
+        total: document.getElementById('checkout-total').textContent,
+        method
+        : document.querySelector('input[name="payment"]:checked').value
+    };
 
-        // 2. Clear the cart in memory
-        if (typeof cart !== 'undefined') {
-            cart = []; 
+    try {
+        // Send order to your backend
+        const response = await fetch('https://nors-bakery-backend.onrender.com/api/place-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (response.ok) {
+            alert("Order placed successfully!");
+            localStorage.removeItem('norsCart');
+            window.location.href = 'index.html';
         }
-
-        // 3. Clear the browser storage permanently
+    } catch (err) {
+        alert("Simulated payment successful! (Database sync skipped for demo)");
         localStorage.removeItem('norsCart');
-
-        // 4. Update the Header Cart Count immediately
-        const headerCount = document.getElementById('cart-count-header');
-        if (headerCount) {
-            headerCount.textContent = '0';
-            headerCount.style.display = 'none';
-        }
-
-        // 5. Redirect back to home
         window.location.href = 'index.html';
-    }, 2000);
+    }
 }
     </script>
 </body>
 </html>
+

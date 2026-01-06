@@ -368,3 +368,21 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCartUI();
     }, 500); // Small delay to ensure database fetch finishes
 });
+
+async function handleCheckout() {
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    const response = await fetch('https://nors-bakery-backend.onrender.com/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            items: cartItems,
+            userEmail: currentUser.email // Get this from Supabase
+        })
+    });
+
+    const session = await response.json();
+    if (session.url) {
+        window.location.href = session.url; // Redirects to Stripe's secure page
+    }
+}
