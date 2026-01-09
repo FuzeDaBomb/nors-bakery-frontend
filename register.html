@@ -74,8 +74,30 @@
                     <span class="logo-icon"><img src="Gambars/logo2.jpg" alt="Logo" /></span>
                     <h1>Nors Bakery</h1>
                 </a>
+<nav class="nav-desktop">
+                    <a href="index.html" data-testid="nav-home">Home</a>
+                    <a href="products.html" data-testid="nav-products">Products</a>
+                    <a href="about.html" data-testid="nav-about">About</a>
+                    <a href="contact.html" data-testid="nav-contact">Contact</a>
+                </nav>
+
+                <div class="header-actions">
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" data-testid="button-mobile-menu">
+                        <span class="hamburger" id="hamburger">☰</span>
+                    </button>
+                </div>
             </div>
+        <div class="mobile-menu" id="mobile-menu">
+                <nav class="nav-mobile">
+                    <a href="index.html" onclick="closeMobileMenu()" data-testid="nav-mobile-home">Home</a>
+                    <a href="products.html" onclick="closeMobileMenu()" data-testid="nav-mobile-products">Products</a>
+                    <a href="about.html" onclick="closeMobileMenu()" data-testid="nav-mobile-about">About</a>
+                    <a href="contact.html" onclick="closeMobileMenu()" data-testid="nav-mobile-contact">Contact</a>
+                </nav>
+            </div>
+         </div>
         </div>
+    </div>
     </header>
 
     <div class="register-container">
