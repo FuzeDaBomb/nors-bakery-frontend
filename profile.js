@@ -1,25 +1,26 @@
-import { supabase } from './script.js'; // Adjust the path if your supabase client is elsewhere
+// 1. Import the supabase connection from your main script
+import { supabase } from './script.js'; 
 
-async function initProfile() {
-    // 1. Get the current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+async function protectPage() {
+    console.log("Checking authorization...");
+    
+    // 2. Ask Supabase for the current session
+    const { data: { session }, error } = await supabase.auth.getSession();
 
-    if (authError || !user) {
-        window.location.href = 'login.html';
+    if (error || !session) {
+        console.log("No active session found. Redirecting...");
+        alert("Please login to access your profile.");
+        window.location.replace('login.html'); // Use replace so they can't click "back"
         return;
     }
 
-    // 2. Fill in the Profile Card
-    document.getElementById('user-email').textContent = user.email;
-    document.getElementById('user-display-name').textContent = user.email.split('@')[0];
-    
-    // Format the date (Member Since)
-    const joinedDate = new Date(user.created_at).toLocaleDateString();
-    document.getElementById('user-joined').textContent = joinedDate;
-
-    // 3. Fetch Transactions for THIS user
-    fetchOrders(user.id);
+    console.log("Access granted for:", session.user.email);
+    // Now call your existing function to load data
+    initProfile(); 
 }
+
+// Start the check immediately
+protectPage();
 
 async function fetchOrders(userId) {
     const { data: orders, error } = await supabase

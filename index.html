@@ -29,11 +29,18 @@
                     <a href="about.html" data-testid="nav-about">About</a>
                     <a href="contact.html" data-testid="nav-contact">Contact</a>
                 </nav>
+                <div id="guest-nav" style="display: flex; gap: 15px; align-items: center;">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-primary">Register</a>
+                </div>
 
-                <div class="header-actions">
-                    <a href="login.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem; margin-right: 0.5rem;" data-testid="button-login">Login</a>
-                    <a href="register.html" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem; margin-right: 1rem;" data-testid="button-register">Sign Up</a>
-                    
+                <div id="user-nav" style="display: none; gap: 15px; align-items: center;">
+                    <a href="profile.html">
+            <img id="header-avatar" src="Gambars/default.jpg" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover;">
+        </a>
+        <button onclick="handleLogout()" class="btn btn-outline" style="padding: 5px 15px;">Logout</button>
+    </div>
+</nav>
                     <button class="cart-btn" onclick="toggleCart()" data-testid="button-cart-toggle">
                         <span class="cart-icon">🛒</span>
                         <span class="cart-count" id="cart-count" data-testid="text-cart-count">0</span>

@@ -1,7 +1,40 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+// Check Auth State and Update Header
+async function checkUser() {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    const guestNav = document.getElementById('guest-nav');
+    const userNav = document.getElementById('user-nav');
+    const avatar = document.getElementById('header-avatar');
+
+    if (user) {
+        // User is logged in
+        guestNav.style.display = 'none';
+        userNav.style.display = 'flex';
+        
+        // Use user's metadata for avatar, or a default image
+        if (user.user_metadata && user.user_metadata.avatar_url) {
+            avatar.src = user.user_metadata.avatar_url;
+        }
+    } else {
+        // No user logged in
+        guestNav.style.display = 'flex';
+        userNav.style.display = 'none';
+    }
+}
+
+// Logout Function
+window.handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) alert(error.message);
+    window.location.reload(); // Refresh to show Login/Register again
+};
+
+// Run the check when the page loads
+document.addEventListener('DOMContentLoaded', checkUser);
 
 // It must start with https:// and end with .supabase.co
-const supabase = createClient('https://kvgongvthegnvavswzvm.supabase.co', 'sb_publishable_jSl4sfOozbfNKYunsvNRZA_hF_ve8t8');
+export const supabase = createClient('https://kvgongvthegnvavswzvm.supabase.co', 'sb_publishable_jSl4sfOozbfNKYunsvNRZA_hF_ve8t8');
 
 // Product Data
 const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
