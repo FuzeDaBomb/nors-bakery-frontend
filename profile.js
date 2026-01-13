@@ -53,7 +53,7 @@ async function fetchOrders(userId) {
 // Logout function
 window.logout = async () => {
     await supabase.auth.signOut();
-    window.location.href = 'index.html';
+    window.location.href = 'profile.html';
 };
 
 document.addEventListener('DOMContentLoaded', initProfile);

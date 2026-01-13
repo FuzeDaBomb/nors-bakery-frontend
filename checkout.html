@@ -9,7 +9,6 @@
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Checkout Specific Styles */
         .checkout-container {
             padding: 4rem 0;
         }
@@ -178,14 +177,13 @@
         .radio-option, .form-group input, .section-header-checkout, .summary-item, .grand-total, #card-payment-details {
             border-color: var(--border-visible); 
         }
-        /* Hide the cart button only on this page */
 .header-actions .cart-btn {
     display: none !important;
 }
     </style>
 </head>
 <body>
-    <!-- Header (Same as other pages) -->
+    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -352,7 +350,6 @@
                 <div class="summary-card">
                     <h3>Order Summary</h3>
                     <div id="checkout-items">
-                        <!-- Items will be injected here -->
                         <p style="color: var(--muted-foreground); padding: 1rem 0;">Loading cart...</p>
                     </div>
                     
@@ -379,7 +376,7 @@
         </div>
     </main>
 
-    <!-- Cart Sidebar (Hidden but kept for script compatibility) -->
+    <!-- Cart Sidebar -->
     <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
     <div class="cart-sidebar" id="cart-sidebar">
         <div class="cart-header">
@@ -399,20 +396,13 @@
 
     <script src="checkout.js"></script>
     <script>
-        // Checkout Specific Logic
-        // Checkout Specific Logic
 let deliveryCost = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Ensure the cart is loaded from localStorage before rendering
     if (typeof loadCart === 'function') {
         loadCart();
     }
-    
-    // Small delay to ensure script.js variables are initialized
     setTimeout(renderCheckoutItems, 200);
-    
-    // Set min date for pickup
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateInput = document.getElementById('pickup-date');
@@ -455,8 +445,6 @@ function renderCheckoutItems() {
         updateCheckoutTotals();
         return;
     }
-
-    // FIXED: item.product.image_url matches your Supabase data
     container.innerHTML = cart.map(item => `
         <div class="summary-item">
             <img src="${item.product.image_url}" alt="${item.product.name}" class="summary-img" onerror="this.src='https://via.placeholder.com/60'">
@@ -496,7 +484,7 @@ async function handleCheckoutSubmit(e) {
     };
 
     try {
-        // Send order to your backend
+    
         const response = await fetch('https://nors-bakery-backend.onrender.com/api/place-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

@@ -112,7 +112,7 @@ window.login = async (event) => {
     } else {
         console.log("Login successful!");
         // Redirect to profile page after success
-        window.location.href = 'index.html';
+        window.location.href = 'profile.html';
     }
 };
 

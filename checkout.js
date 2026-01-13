@@ -3,7 +3,7 @@ const API_URL = typeof window !== 'undefined' && window.location.hostname === 'l
   ? 'http://localhost:5000/api'
   : 'https://nors-bakery-backend.onrender.com';
 
-let products = []; // Start empty, fill from database
+let products = [];
 
 // Global State
 let cart = [];
@@ -31,7 +31,7 @@ const quickActions = document.getElementById('quick-actions');
 document.addEventListener('DOMContentLoaded', async function() {
     loadCart();
     
-    // FETCH REAL DATA FIRST
+
     try {
         const response = await fetch(`${API_URL}/products`);
         products = await response.json();
@@ -340,25 +340,19 @@ function sendQuickAction(action) {
 
 window.clearCart = clearCart;
 
-// Add this to the very end of checkout.js
 window.onload = () => {
-    // 1. Initialize cart UI immediately
     updateCartUI();
-
-    // 2. Check if we are on the Home Page and load products
     const featuredGrid = document.getElementById('featured-products');
     if (featuredGrid) {
         loadFeaturedProducts();
     }
 
-    // 3. Check if we are on the Products Page
     const productsGrid = document.getElementById('products-grid');
     if (productsGrid) {
         loadProducts();
     }
 };
 
-// Add this to the very end of checkout.js if it's not there
 document.addEventListener('DOMContentLoaded', () => {
     // This runs after the fetch in your existing DOMContentLoaded listener
     setTimeout(() => {
@@ -377,12 +371,7 @@ async function handleCheckout() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             items: cartItems,
-            userEmail: currentUser.email // Get this from Supabase
+            userEmail: currentUser.email
         })
     });
-
-    const session = await response.json();
-    if (session.url) {
-        window.location.href = session.url; // Redirects to Stripe's secure page
-    }
 }
