@@ -26,8 +26,12 @@ async function checkUser() {
 // Logout Function
 window.handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) alert(error.message);
-    window.location.reload(); // Refresh to show Login/Register again
+    if (error) {
+        alert(error.message);
+    } else {
+        // Redirect to home instead of just reloading
+        window.location.href = 'index.html'; 
+    }
 };
 
 // Run the check when the page loads
@@ -58,20 +62,29 @@ window.signUp = async (event) => {
     // 1. Create account in Supabase
     const { data, error } = await supabase.auth.signUp({ email, password });
 
-    if (error) return alert(error.message);
+    if (error) return alert("Auth Error: " + error.message);
 
     if (data.user) {
-        // 2. Sync to your Render Backend
-        await fetch('https://nors-bakery-backend.onrender.com/register-profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: data.user.id,
-                email: email,
-                full_name: fullName
-            })
-        });
-        alert("Registration successful! Check your email for a confirmation link.");
+        try {
+            // 2. Sync to Render Backend with timeout/error check
+            const response = await fetch('https://nors-bakery-backend.onrender.com/register-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: data.user.id,
+                    email: email,
+                    full_name: fullName
+                })
+            });
+
+            if (!response.ok) throw new Error("Backend sync failed.");
+
+            alert("Registration successful! Please check your email for confirmation.");
+            window.location.href = 'login.html';
+        } catch (err) {
+            console.error("Profile Sync Error:", err);
+            alert("Account created, but profile sync failed. You may need to contact support.");
+        }
     }
 };
 
@@ -99,7 +112,7 @@ window.login = async (event) => {
     } else {
         console.log("Login successful!");
         // Redirect to profile page after success
-        window.location.href = 'profile.html';
+        window.location.href = 'index.html';
     }
 };
 
@@ -121,13 +134,14 @@ const quickActions = document.getElementById('quick-actions');
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async function() {
-    // 1. Initialize core data
+    // Run UI management first
+    await manageAuthUI(); 
+    
     loadCart();
     await loadProducts(); 
 
-    // 2. Get session and define currentUser
     const { data: { session } } = await supabase.auth.getSession();
-    const currentUser = session?.user || null; // This was the missing piece!
+    const currentUser = session?.user || null;
 
     if (session) {
         console.log("Logged in as:", session.user.email);
@@ -221,7 +235,7 @@ function loadFeaturedProducts() {
 async function loadProducts() {
     const productsGrid = document.getElementById('products-grid');
     if (productsGrid) {
-        productsGrid.innerHTML = '<p class="loading">Loading fresh treats...</p>';
+        productsGrid.innerHTML = '<div class="loading-spinner">🍞 Preheating the oven... (Our server takes a moment to wake up)</div>';
     }
 
     try {
@@ -396,7 +410,7 @@ function updateCartUI() {
 function createCartItem(item) {
     return `
         <div class="cart-item">
-            <img src="./${item.product.image_url}" 
+            <img src="${item.product.image_url}" 
                  alt="${item.product.name}" 
                  class="cart-item-image">
             <div class="cart-item-info">
@@ -754,3 +768,28 @@ function selectPayment(type) {
         alipayQR.style.display = 'none';
     }
 }
+// This function manages the visibility of your buttons
+async function manageAuthUI() {
+    // 1. Check if Supabase has a logged-in user session
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const loggedOutUI = document.getElementById('auth-logged-out');
+    const loggedInUI = document.getElementById('auth-logged-in');
+
+    if (user) {
+        // User is logged in: Hide Login/Register, Show Profile/Logout
+        if(loggedOutUI) loggedOutUI.style.display = 'none';
+        if(loggedInUI) loggedInUI.style.display = 'flex';
+        console.log("User is logged in as:", user.email);
+    } else {
+        // User is a guest: Show Login/Register, Hide Logout
+        if(loggedOutUI) loggedOutUI.style.display = 'flex';
+        if(loggedInUI) loggedInUI.style.display = 'none';
+        console.log("No user session found.");
+    }
+}
+
+
+
+// Run this check every time the page finishes loading
+document.addEventListener('DOMContentLoaded', manageAuthUI);
