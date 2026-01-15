@@ -9,14 +9,6 @@
    <head>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="orders.css"> </head>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nors Bakery - Fresh Baked Goods Daily</title>
-    <meta name="description" content="Nors Bakery offers fresh artisan breads, custom cakes, and delicious pastries.">
-
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -87,11 +79,11 @@
 
 <div id="orders-list">
     <div class="order-card" data-status="Completed">
-        <div class="order-header">
-            <span class="order-id">Order ID: #NB20250114</span>
-            <span class="order-status">Completed</span>
-        </div>
-        </div>
+    <div class="order-header">
+        <span class="order-id">Order ID: #NB20250114</span>
+        <span class="order-status">Completed</span>
+    </div>
+    </div>
     
     <div class="order-card" data-status="To Pay">
         <div class="order-header">
@@ -133,5 +125,39 @@
     </main>
 
     <script type="module" src="orders.js"></script>
+
+    <script>
+    function filterOrders(status, element) {
+        // 1. Update the Tab Styling
+        const tabs = document.querySelectorAll('.tab-item');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        element.classList.add('active');
+
+        // 2. Filter the Order Cards
+        const cards = document.querySelectorAll('.order-card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            // Get the status from the data-status attribute OR the text inside the status span
+            const cardStatus = card.getAttribute('data-status') || 
+                               card.querySelector('.order-status').textContent.trim();
+
+            if (status === 'all' || cardStatus === status) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // 3. Show "No Orders" message if the filter result is empty
+        const emptyMessage = document.querySelector('.empty-orders');
+        if (visibleCount === 0) {
+            emptyMessage.style.display = 'block';
+        } else {
+            emptyMessage.style.display = 'none';
+        }
+    }
+</script>
 </body>
 </html>
