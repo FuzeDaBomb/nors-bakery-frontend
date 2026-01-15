@@ -458,7 +458,37 @@ function checkout() {
     // Redirect to checkout page
     window.location.href = 'checkout.html';
 }
+function renderCheckoutItems() {
+    const container = document.getElementById('checkout-items');
+    
+    // Check window.cart if cart is undefined
+    const currentCart = window.cart || []; 
+    
+    if (currentCart.length === 0) {
+        container.innerHTML = '<p>Your cart is empty. <a href="products.html">Go shopping</a></p>';
+        updateCheckoutTotals();
+        return;
+    }
 
+    container.innerHTML = currentCart.map(item => `
+        <div class="summary-item" style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+            <img src="${item.product.image_url}" alt="${item.product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+            <div class="summary-details" style="flex: 1;">
+                <h4 style="margin: 0;">${item.product.name}</h4>
+                <div style="font-size: 0.8rem; color: gray;">Qty: ${item.quantity}</div>
+            </div>
+            <div class="summary-price">RM ${(parseFloat(item.product.price) * item.quantity).toFixed(2)}</div>
+        </div>
+    `).join('');
+
+    updateCheckoutTotals();
+}
+
+function updateCheckoutTotals() {
+    const currentCart = window.cart || [];
+    const subtotal = currentCart.reduce((sum, item) => sum + (parseFloat(item.product.price) * item.quantity), 0);
+    // ... rest of your code ...
+}
 // Mobile Menu Functions
 function toggleMobileMenu() {
     if (mobileMenu && hamburger) {
@@ -722,24 +752,6 @@ async function loadUserOrders(userId) {
     }
 }
 
-// Add these to the very end so your HTML can see them
-window.addToCart = addToCart;
-window.toggleCart = toggleCart;
-window.filterProducts = filterProducts;
-window.updateCartQuantity = updateCartQuantity;
-window.removeFromCart = removeFromCart;
-window.checkout = checkout;
-window.sendMessage = sendMessage;
-window.toggleChatbot = toggleChatbot;
-window.sendQuickAction = sendQuickAction;
-// Add these to the existing window assignments at the bottom of script.js
-window.toggleMobileMenu = toggleMobileMenu;
-window.closeMobileMenu = closeMobileMenu;
-window.closeCart = closeCart;
-window.toggleChatbot = toggleChatbot;
-window.closeChatbot = closeChatbot;
-window.clearCart = clearCart; // Add this line!
-
 function selectPayment(type) {
     // Update radio option styles
     const options = document.querySelectorAll('input[name="payment"]');
@@ -793,3 +805,20 @@ async function manageAuthUI() {
 
 // Run this check every time the page finishes loading
 document.addEventListener('DOMContentLoaded', manageAuthUI);
+
+window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.filterProducts = filterProducts;
+window.updateCartQuantity = updateCartQuantity;
+window.removeFromCart = removeFromCart;
+window.checkout = checkout;
+window.sendMessage = sendMessage;
+window.toggleChatbot = toggleChatbot;
+window.sendQuickAction = sendQuickAction;
+window.toggleMobileMenu = toggleMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
+window.closeCart = closeCart;
+window.toggleChatbot = toggleChatbot;
+window.closeChatbot = closeChatbot;
+window.clearCart = clearCart;
+window.cart = cart;

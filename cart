@@ -1,0 +1,43 @@
+    <div class="cart-overlay" id="cart-overlay" onclick="closeCart()" data-testid="overlay-cart"></div>
+    <div class="cart-sidebar" id="cart-sidebar" data-testid="sidebar-cart">
+        <div class="cart-header">
+            <h3 class="cart-title" data-testid="text-cart-title">Shopping Cart</h3>
+            <button class="cart-close" onclick="closeCart()" data-testid="button-close-cart">✕</button>
+        </div>
+        
+        <div class="cart-content" id="cart-content">
+            <div class="cart-empty" id="cart-empty" data-testid="text-cart-empty">
+                <div class="cart-empty-icon">🛒</div>
+                <p>Your cart is empty</p>
+            </div>
+            <div class="cart-items" id="cart-items"></div>
+        </div>
+        
+        <div class="cart-footer" id="cart-footer" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="cart-total-amount" id="cart-total" data-testid="text-cart-total">$0.00</span>
+            </div>
+            <div class="cart-actions">
+                <button class="btn btn-primary btn-full" onclick="checkout()" data-testid="button-checkout">
+                    Proceed to Checkout
+                </button>
+                <button class="btn btn-outline btn-full" onclick="clearCart()" data-testid="button-clear-cart">
+                    Clear Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    /////
+
+    <div class="header-actions">
+                    <button class="cart-btn" onclick="toggleCart()" data-testid="button-cart-toggle">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count" id="cart-count" data-testid="text-cart-count">0</span>
+                    </button>
+                    
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" data-testid="button-mobile-menu">
+                        <span class="hamburger" id="hamburger">☰</span>
+                    </button>
+                </div>
