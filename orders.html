@@ -33,26 +33,23 @@
 
                 <div class="header-actions">
                     <div id="auth-logged-out" style="display: flex; align-items: center;">
-                        <a href="login.html" class="btn btn-outline">Login</a>
-                        <a href="register.html" class="btn btn-primary">Sign Up</a>
-                    </div>
+        <a href="login.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem; margin-right: 0.5rem;" data-testid="button-login">Login</a>
+        <a href="register.html" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem; margin-right: 1rem;" data-testid="button-register">Sign Up</a>
+    </div>
 
-                    <div id="auth-logged-in" style="display: none; gap: 10px; align-items: center;">
-                        <a href="profile.html">
-                            <img id="user-avatar" src="Gambars/default.jpg" style="width:35px; height:35px; border-radius:50%; object-fit: cover;">
-                        </a>
-                        <button onclick="handleLogout()" class="btn btn-outline">Logout</button>
-                    </div>
+    <div id="auth-logged-in" style="display: none; gap: 10px; align-items: center; margin-right: 1rem;">
+        <a href="profile.html"><img id="user-avatar" src="Gambars/default.jpg" style="width:35px; height:35px; border-radius:50%; object-fit: cover; border: 2px solid var(--primary);"></a>
+        <button onclick="handleLogout()" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Logout</button>
+    </div>
 
-                    <button class="cart-btn" onclick="toggleCart()">
-                        <span class="cart-icon">🛒</span>
-                        <span class="cart-count" id="cart-count">0</span>
-                    </button>
-                    
-                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" data-testid="button-mobile-menu">
-                        <span class="hamburger" id="hamburger">☰</span>
-                    </button>
-                </div>
+    <button class="cart-btn" onclick="toggleCart()" data-testid="button-cart-toggle">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count" id="cart-count" data-testid="text-cart-count">0</span>
+    </button>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" data-testid="button-mobile-menu">
+        <span class="hamburger" id="hamburger">☰</span>
+    </button>
             <!-- Mobile Menu -->
             <div class="mobile-menu" id="mobile-menu">
                 <nav class="nav-mobile">
