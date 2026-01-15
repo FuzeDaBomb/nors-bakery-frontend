@@ -8,16 +8,12 @@ async function checkUser() {
     const avatar = document.getElementById('header-avatar');
 
     if (user) {
-        // User is logged in
         guestNav.style.display = 'none';
         userNav.style.display = 'flex';
-        
-        // Use user's metadata for avatar, or a default image
         if (user.user_metadata && user.user_metadata.avatar_url) {
             avatar.src = user.user_metadata.avatar_url;
         }
     } else {
-        // No user logged in
         guestNav.style.display = 'flex';
         userNav.style.display = 'none';
     }
@@ -29,7 +25,6 @@ window.handleLogout = async () => {
     if (error) {
         alert(error.message);
     } else {
-        // Redirect to home instead of just reloading
         window.location.href = 'index.html'; 
     }
 };
@@ -37,7 +32,6 @@ window.handleLogout = async () => {
 // Run the check when the page loads
 document.addEventListener('DOMContentLoaded', checkUser);
 
-// It must start with https:// and end with .supabase.co
 export const supabase = createClient('https://kvgongvthegnvavswzvm.supabase.co', 'sb_publishable_jSl4sfOozbfNKYunsvNRZA_hF_ve8t8');
 
 // Product Data
@@ -300,24 +294,23 @@ function filterProducts(category) {
 function createProductCard(product, featured = false) {
     const cardClass = featured ? 'product-card featured hover-lift' : 'product-card hover-lift';
     
-const imagePath = product.image_url;
-
     return `
         <div class="${cardClass}">
-            <div class="product-image-container">
-                <img src="${imagePath}" 
-                     alt="${product.name}" 
-                     class="product-image"
-                     onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+            <div class="product-detail-popup">
+                <h4>${product.name}</h4>
+                <p>${product.description}</p>
+                <ul class="product-specs">
+                    <li><i class="fas fa-check"></i> Freshly Baked</li>
+                    <li><i class="fas fa-tag"></i> ${product.category}</li>
+                </ul>
             </div>
+
+            <img src="${product.image_url}" alt="${product.name}" class="product-image">
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
-                <p class="product-description">${product.description}</p>
                 <div class="product-footer">
                     <span class="product-price">RM${parseFloat(product.price).toFixed(2)}</span>
-                    <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">
-                        ${featured ? 'Add to Cart' : 'Add to Cart'}
-                    </button>
+                    <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">+</button>
                 </div>
             </div>
         </div>
