@@ -375,3 +375,109 @@ async function handleCheckout() {
         })
     });
 }
+let deliveryCost = 0;
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof loadCart === 'function') {
+        loadCart();
+    }
+    setTimeout(renderCheckoutItems, 200);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateInput = document.getElementById('pickup-date');
+    if (dateInput) dateInput.min = tomorrow.toISOString().split('T')[0];
+});
+
+function selectDelivery(type) {
+    const options = document.querySelectorAll('input[name="delivery"]');
+    options.forEach(opt => {
+        const parent = opt.closest('.radio-option');
+        if (opt.value === type) {
+            opt.checked = true;
+            parent.classList.add('selected');
+        } else {
+            parent.classList.remove('selected');
+        }
+    });
+
+    const addrFields = document.getElementById('delivery-address-fields');
+    const addrInput = document.getElementById('addr-input');
+
+    if (type === 'delivery') {
+        deliveryCost = 15.00;
+        addrFields.style.display = 'block';
+        if (addrInput) addrInput.required = true;
+    } else {
+        deliveryCost = 0;
+        addrFields.style.display = 'none';
+        if (addrInput) addrInput.required = false;
+    }
+    
+    updateCheckoutTotals();
+}
+
+function renderCheckoutItems() {
+    const container = document.getElementById('checkout-items');
+    
+    if (!cart || cart.length === 0) {
+        container.innerHTML = '<p>Your cart is empty. <a href="products.html">Go shopping</a></p>';
+        updateCheckoutTotals();
+        return;
+    }
+    container.innerHTML = cart.map(item => `
+        <div class="summary-item">
+            <img src="${item.product.image_url}" alt="${item.product.name}" class="summary-img" onerror="this.src='https://via.placeholder.com/60'">
+            <div class="summary-details">
+                <h4>${item.product.name}</h4>
+                <div style="font-size: 0.8rem; color: var(--muted-foreground);">Qty: ${item.quantity}</div>
+            </div>
+            <div class="summary-price">RM ${(parseFloat(item.product.price) * item.quantity).toFixed(2)}</div>
+        </div>
+    `).join('');
+
+    updateCheckoutTotals();
+}
+
+function updateCheckoutTotals() {
+    const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.product.price) * item.quantity), 0);
+    const tax = subtotal * 0.06;
+    const total = subtotal + tax + deliveryCost;
+
+    document.getElementById('checkout-subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
+    document.getElementById('checkout-tax').textContent = `RM ${tax.toFixed(2)}`;
+    document.getElementById('checkout-shipping').textContent = deliveryCost === 0 ? 'Free' : `RM ${deliveryCost.toFixed(2)}`;
+    document.getElementById('checkout-total').textContent = `RM ${total.toFixed(2)}`;
+}
+
+async function handleCheckoutSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = "Processing...";
+    btn.disabled = true;
+
+    const orderData = {
+        items: cart,
+        total: document.getElementById('checkout-total').textContent,
+        method
+        : document.querySelector('input[name="payment"]:checked').value
+    };
+
+    try {
+    
+        const response = await fetch('https://nors-bakery-backend.onrender.com/api/place-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (response.ok) {
+            alert("Order placed successfully!");
+            localStorage.removeItem('norsCart');
+            window.location.href = 'index.html';
+        }
+    } catch (err) {
+        alert("Simulated payment successful! (Database sync skipped for demo)");
+        localStorage.removeItem('norsCart');
+        window.location.href = 'index.html';
+    }
+}

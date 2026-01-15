@@ -6,61 +6,7 @@
     <title>My Profile - Nors Bakery</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .profile-container {
-            max-width: 800px;
-            margin: 4rem auto;
-            padding: 2rem;
-            background: var(--card);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-lg);
-        }
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid var(--border);
-        }
-        .profile-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--primary);
-        }
-        .profile-info h2 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        .profile-info p {
-            color: var(--muted-foreground);
-        }
-        .profile-section {
-            margin-bottom: 2rem;
-        }
-        .profile-section h3 {
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-        .info-item label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: var(--muted-foreground);
-            font-size: 0.875rem;
-        }
-        .info-item p {
-            font-size: 1.125rem;
-            color: var(--foreground);
-        }
-    </style>
+    <link rel="stylesheet" href="profile.css">
 </head>
 <body>
     <!-- Header -->
@@ -77,6 +23,7 @@
                     <a href="products.html" data-testid="nav-products">Products</a>
                     <a href="about.html" data-testid="nav-about">About</a>
                     <a href="contact.html" data-testid="nav-contact">Contact</a>
+                    <a href="orders.html">My Orders</a>
                 </nav>
 
                 <div class="header-actions">
@@ -136,7 +83,7 @@
                     </div>
                     <div class="info-item">
                         <label>Total Orders</label>
-                        <p>0 Orders</p>
+                        <p>1 Orders</p>
                     </div>
                 </div>
             </div>

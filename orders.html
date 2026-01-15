@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Nors Bakery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+   <head>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="orders.css"> </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nors Bakery - Fresh Baked Goods Daily</title>
+    <meta name="description" content="Nors Bakery offers fresh artisan breads, custom cakes, and delicious pastries.">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon"><img src="Gambars/logo2.jpg" alt="Logo" /></span>
+
+                    <h1>Nors Bakery</h1>
+                </a>
+
+                <nav class="nav-desktop">
+                    <a href="index.html" data-testid="nav-home">Home</a>
+                    <a href="products.html" data-testid="nav-products">Products</a>
+                    <a href="about.html" data-testid="nav-about">About</a>
+                    <a href="contact.html" data-testid="nav-contact">Contact</a>
+                    <a href="orders.html">My Orders</a>
+                </nav>
+
+                <div class="header-actions">
+    <div id="auth-logged-out" style="display: flex; align-items: center;">
+        <a href="login.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem; margin-right: 0.5rem;" data-testid="button-login">Login</a>
+        <a href="register.html" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem; margin-right: 1rem;" data-testid="button-register">Sign Up</a>
+    </div>
+
+    <div id="auth-logged-in" style="display: none; gap: 10px; align-items: center; margin-right: 1rem;">
+        <a href="profile.html"><img id="user-avatar" src="default.png" style="width:35px; height:35px; border-radius:50%; object-fit: cover; border: 2px solid var(--primary);"></a>
+        <button onclick="handleLogout()" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Logout</button>
+    </div>
+
+    <button class="cart-btn" onclick="toggleCart()" data-testid="button-cart-toggle">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count" id="cart-count" data-testid="text-cart-count">0</span>
+    </button>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" data-testid="button-mobile-menu">
+        <span class="hamburger" id="hamburger">☰</span>
+    </button>
+</div>
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobile-menu">
+                <nav class="nav-mobile">
+                    <a href="index.html" onclick="closeMobileMenu()" data-testid="nav-mobile-home">Home</a>
+                    <a href="products.html" onclick="closeMobileMenu()" data-testid="nav-mobile-products">Products</a>
+                    <a href="about.html" onclick="closeMobileMenu()" data-testid="nav-mobile-about">About</a>
+                    <a href="contact.html" onclick="closeMobileMenu()" data-testid="nav-mobile-contact">Contact</a>
+                    <a href="orders.html" onclick="closeMobileMenu()" data-testid="nav-mobile-orders">My Orders</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="orders-page">
+        <div class="container">
+            <div class="order-tabs">
+    <div class="tab-item active" onclick="filterOrders('all', this)">All</div>
+    <div class="tab-item" onclick="filterOrders('To Pay', this)">To Pay</div>
+    <div class="tab-item" onclick="filterOrders('To Ship', this)">To Ship</div>
+    <div class="tab-item" onclick="filterOrders('To Receive', this)">To Receive</div>
+    <div class="tab-item" onclick="filterOrders('Completed', this)">Completed</div>
+    <div class="tab-item" onclick="filterOrders('Cancelled', this)">Cancelled</div>
+</div>
+
+<div id="orders-list">
+    <div class="order-card" data-status="Completed">
+        <div class="order-header">
+            <span class="order-id">Order ID: #NB20250114</span>
+            <span class="order-status">Completed</span>
+        </div>
+        </div>
+    
+    <div class="order-card" data-status="To Pay">
+        <div class="order-header">
+            <span class="order-id">Order ID: #NB20250115</span>
+            <span class="order-status">To Pay</span>
+        </div>
+        </div>
+</div>
+
+            <div id="orders-list">
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">Order ID: #NB20250114</span>
+                        <span class="order-status">Completed</span>
+                    </div>
+                    <div class="order-body">
+                        <div class="item-row">
+                            <img src="Gambars/cake1.jpg" alt="Cake" class="item-img">
+                            <div class="item-details">
+                                <div class="item-name">Three layered cake</div>
+                                <div class="item-meta">Quantity: 1</div>
+                                <div class="item-meta">RM 85.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total"><span>Order Total:</span>RM 85.00</div>
+                        <button class="btn-reorder">Buy Again</button>
+                    </div>
+                </div>
+
+                <div class="empty-orders" style="display:none;">
+                    <i class="fas fa-receipt fa-3x mb-3" style="color: #ddd;"></i>
+                    <p>No orders yet</p>
+                    <a href="menu.html" class="btn btn-primary mt-3">Order Now</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="orders.js"></script>
+</body>
+</html>
