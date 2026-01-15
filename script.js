@@ -501,46 +501,36 @@ function setActiveNavigation() {
 }
 
 // Chatbot Functions
-// --- FIXED CHATBOT FUNCTIONS ---
-
 function initializeChatbot() {
-    // Only set the initial message if the chat is currently empty
-    if (chatMessages.length === 0) {
-        chatMessages = [
-            {
-                id: "1",
-                text: "How can I help you today?",
-                isBot: true,
-                timestamp: new Date()
-            }
-        ];
-        updateChatMessages();
-    }
+    chatMessages = [
+        {
+            id: "1",
+            text: "How can i help you?",
+            isBot: true,
+            timestamp: new Date()
+        }
+    ];
+    
+    updateChatMessages();
 }
 
-window.toggleChatbot = function() {
+function toggleChatbot() {
     chatbotOpen = !chatbotOpen;
-    const windowEl = document.getElementById('chatbot-window');
-    if (windowEl) {
-        windowEl.classList.toggle('open', chatbotOpen);
-        if (chatbotOpen) initializeChatbot();
-    }
-};
+    chatbotWindow.classList.toggle('open', chatbotOpen);
+}
 
-window.closeChatbot = function() {
+function closeChatbot() {
     chatbotOpen = false;
-    const windowEl = document.getElementById('chatbot-window');
-    if (windowEl) windowEl.classList.remove('open');
-};
+    chatbotWindow.classList.remove('open');
+}
 
-window.sendMessage = function() {
+function sendMessage() {
     const input = document.getElementById('chatbot-input-field');
-    if (!input) return;
-    
     const message = input.value.trim();
+    
     if (!message) return;
     
-    // 1. Add user message
+    // Add user message
     chatMessages.push({
         id: Date.now().toString(),
         text: message,
@@ -549,14 +539,8 @@ window.sendMessage = function() {
     });
     
     input.value = '';
-    
-    // Hide quick actions once user starts typing
-    const qaContainer = document.getElementById('quick-actions');
-    if (qaContainer) qaContainer.style.display = 'none';
-
     updateChatMessages();
     
-    // 2. Simulate Bot Thinking
     setTimeout(() => {
         const response = getBotResponse(message);
         chatMessages.push({
@@ -566,78 +550,47 @@ window.sendMessage = function() {
             timestamp: new Date()
         });
         updateChatMessages();
-    }, 600);
-};
+    }, 500);
+    
+    if (quickActions) {
+        quickActions.style.display = 'none';
+    }
+}
 
-window.sendQuickAction = function(action) {
-    let userText = "";
-    let botResponse = "";
+function sendQuickAction(action) {
+    let response = "";
     
     switch (action) {
         case "hours":
-            userText = "What are your hours?";
-            botResponse = "We are open daily from 8:00 AM to 10:00 PM!";
+            response = "WE are not oppen yet";
             break;
         case "specials":
-            userText = "What's on special today?";
-            botResponse = "Today's special is our famous Three-Layered Wedding Cake!";
+            response = "Today's specials is the Three layered wedding cake";
             break;
         case "orders":
-            userText = "How do I place a custom order?";
-            botResponse = "For custom cakes, please call us at 011-234567 or visit us in-store.";
+            response = "For custom orders, please call someone";
             break;
         case "location":
-            userText = "Where are you located?";
-            botResponse = "We are located at Nors Bakery, Malaysia. Use the contact page for directions!";
+            response = "We're located at somewhere idk";
             break;
         default:
-            userText = "Hello!";
-            botResponse = "How can I help you?";
+            response = "What you want?";
     }
     
-    // Push user question
-    chatMessages.push({ id: Date.now().toString(), text: userText, isBot: false });
-    // Push bot answer
-    chatMessages.push({ id: (Date.now()+1).toString(), text: botResponse, isBot: true });
-    
-    // Hide quick actions
-    const qaContainer = document.getElementById('quick-actions');
-    if (qaContainer) qaContainer.style.display = 'none';
+    chatMessages.push({
+        id: Date.now().toString(),
+        text: response,
+        isBot: true,
+        timestamp: new Date()
+    });
     
     updateChatMessages();
-};
-
-function updateChatMessages() {
-    const messagesContainer = document.getElementById('chatbot-messages');
-    if (!messagesContainer) return;
-       
-    // Filter out previous quick actions if they exist in the container to prevent duplicates
-    const messagesHtml = chatMessages.map(msg => createChatMessage(msg)).join('');
     
-    // Update the message area only
-    messagesContainer.innerHTML = messagesHtml;
-    
-    // Auto-scroll to bottom
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-
-function createChatMessage(message) {
-    const messageClass = message.isBot ? 'message bot-message' : 'message user-message';
-    return `
-        <div class="${messageClass}">
-            ${message.isBot ? '<div class="message-avatar">🤖</div>' : ''}
-            <div class="message-content">
-                <p>${message.text}</p>
-            </div>
-        </div>
-    `;
-}
-
-window.handleChatKeyPress = function(event) {
-    if (event.key === 'Enter') {
-        sendMessage();
+    // Hide quick actions
+    if (quickActions) {
+        quickActions.style.display = 'none';
     }
-};
+}
 
 function getBotResponse(message) {
     const lowerMessage = message.toLowerCase();
@@ -769,6 +722,23 @@ async function loadUserOrders(userId) {
     }
 }
 
+// Add these to the very end so your HTML can see them
+window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.filterProducts = filterProducts;
+window.updateCartQuantity = updateCartQuantity;
+window.removeFromCart = removeFromCart;
+window.checkout = checkout;
+window.sendMessage = sendMessage;
+window.toggleChatbot = toggleChatbot;
+window.sendQuickAction = sendQuickAction;
+// Add these to the existing window assignments at the bottom of script.js
+window.toggleMobileMenu = toggleMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
+window.closeCart = closeCart;
+window.toggleChatbot = toggleChatbot;
+window.closeChatbot = closeChatbot;
+window.clearCart = clearCart; // Add this line!
 
 function selectPayment(type) {
     // Update radio option styles
@@ -820,19 +790,6 @@ async function manageAuthUI() {
 }
 
 
-document.addEventListener('DOMContentLoaded', manageAuthUI);
 
-window.addToCart = addToCart;
-window.toggleCart = toggleCart;
-window.filterProducts = filterProducts;
-window.updateCartQuantity = updateCartQuantity;
-window.removeFromCart = removeFromCart;
-window.checkout = checkout;
-window.toggleChatbot = toggleChatbot;
-window.closeChatbot = closeChatbot;
-window.sendMessage = sendMessage;
-window.sendQuickAction = sendQuickAction;
-window.handleChatKeyPress = handleChatKeyPress;
-window.toggleMobileMenu = toggleMobileMenu;
-window.closeMobileMenu = closeMobileMenu;
-window.closeCart = closeCart;
+// Run this check every time the page finishes loading
+document.addEventListener('DOMContentLoaded', manageAuthUI);
