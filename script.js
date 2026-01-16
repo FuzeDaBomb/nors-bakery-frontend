@@ -292,25 +292,29 @@ function filterProducts(category) {
 }
 
 function createProductCard(product, featured = false) {
-    const cardClass = featured ? 'product-card featured hover-lift' : 'product-card hover-lift';
+    const imgPath = product.image_url || product.imageUrl;
+    const cardClass = featured ? 'product-card featured' : 'product-card';
     
     return `
         <div class="${cardClass}">
-            <div class="product-detail-popup">
-                <h4>${product.name}</h4>
-                <p>${product.description}</p>
-                <ul class="product-specs">
-                    <li><i class="fas fa-check"></i> Freshly Baked</li>
-                    <li><i class="fas fa-tag"></i> ${product.category}</li>
-                </ul>
+            <div class="image-container">
+                <img src="${imgPath}" alt="${product.name}" class="product-image" onerror="this.src='Gambars/logo2.jpg'">
+                
+                <div class="product-detail-popup">
+                    <h4>${product.name}</h4>
+                    <p>${product.description}</p>
+                    <ul class="product-specs">
+                        <li><i class="fas fa-check"></i> Freshly Baked</li>
+                        <li><i class="fas fa-tag"></i> ${product.category}</li>
+                    </ul>
+                </div>
             </div>
 
-            <img src="${product.image_url}" alt="${product.name}" class="product-image">
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
                 <div class="product-footer">
                     <span class="product-price">RM${parseFloat(product.price).toFixed(2)}</span>
-                    <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">+</button>
+                    <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -677,7 +681,8 @@ function getBotResponse(message) {
             "I lost 2 IQ points reading that.",
             "Bro what kinda fanfic dialogue was that 😭",
             "You're typing like your keyboard is allergic to logic.",
-            "Your message gave me emotional malware."
+            "Your message gave me emotional malware.",
+            "SYFM"
         ];
 
         // pick a random one
