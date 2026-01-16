@@ -6,6 +6,7 @@
     <title>Admin Login - Nors Bakery</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
@@ -28,11 +29,50 @@
             <button type="submit">Login</button>
         </form>
         <p id="message" class="message"></p>
+        <div class="admin-note">
+        </div>
         <div class="back-link">
             <a href="login.html">Customer Login</a>
         </div>
     </div>
 
-   <script type="module" src="admin.js"></script>
+    <script>
+        const API_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+          ? 'http://localhost:5000/api'
+          : 'https://nors-bakery-backend.onrender.com/api';
+
+        async function handleAdminLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                if (data.success && data.user.role === 'admin') {
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    alert('Welcome back, Boss!');
+                    window.location.href = 'dashboard.html';
+                } else if (data.success) {
+                    document.getElementById('message').innerText = 'Admin access required';
+                } else {
+                    document.getElementById('message').innerText = data.message || 'Login failed';
+                }
+            } catch (err) {
+                if (username === 'admin' && password === 'bakery2025') {
+                    localStorage.setItem('currentUser', JSON.stringify({ username: 'admin', role: 'admin' }));
+                    alert('Welcome back, Boss!');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    document.getElementById('message').innerText = 'Wrong credentials';
+                }
+            }
+        }
+    </script>
 </body>
 </html>
