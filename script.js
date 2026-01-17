@@ -740,13 +740,12 @@ async function loadUserOrders(userId) {
     if (orders.length === 0) {
         orderList.innerHTML = "<p>No orders yet. Go get some cake!</p>";
     } else {
-        orderList.innerHTML = orders.map(order => `
-    <div class="order-card">
-        <p><strong>Item:</strong> ${order.product_name}</p> 
-        <p><strong>Price:</strong> RM${parseFloat(order.price).toFixed(2)}</p>
-        <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
-    </div>
-`).join('');
+    orderList.innerHTML = orders.map(order => `
+        <div class="order-card">
+            <p><strong>Item:</strong> ${order.name}</p> <p><strong>Price:</strong> RM${parseFloat(order.price).toFixed(2)}</p>
+            <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
+        </div>
+    `).join('');
     }
 }
 
@@ -800,32 +799,39 @@ async function manageAuthUI() {
 }
 // Function to simulate purchase when "Proceed" is clicked
 async function simulatePurchase(product) {
-    // 1. Get the current logged-in user
-    const { data: { user } } = await supabase.auth.getUser();
+    // 1. Get the user
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (userError || !user) {
+        console.error("Auth Check Failed:", userError);
         alert("Please login to place an order!");
         window.location.href = "login.html";
         return;
     }
 
-    // 2. Insert the demo order into Supabase
-    const { error } = await supabase
-        .from('orders')
+    console.log("Found User ID:", user.id);
+    console.log("Sending Product:", product.name, "Price:", product.price);
+
+    // 2. Insert into 'transactions' (Make sure this name matches your Supabase table)
+    const { data, error } = await supabase
+        .from('transactions') 
         .insert([
             { 
                 user_id: user.id, 
-                product_name: product.name, 
-                price: product.price,
-                status: 'To Pay' // Default status for demo
+                name: product.name, // In your code, you used product_name earlier. Change to 'name' if that's your DB column.
+                price: parseFloat(product.price), // Ensure it's a number
+                created_at: new Date().toISOString()
             }
         ]);
 
     if (error) {
-        console.error("Purchase failed:", error.message);
+        // If this runs, it will tell you exactly which column is missing or if RLS is blocking it
+        console.error("Supabase Insert Error:", error.message);
+        console.error("Error Details:", error.details);
+        alert("Database Error: " + error.message);
     } else {
-        alert("Order placed successfully! Check 'My Orders'.");
-        window.location.href = "orders.html";
+        console.log("Success! Database updated:", data);
+        alert("Order placed successfully! Check your profile.");
     }
 }
 // Updated for your script.js
