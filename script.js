@@ -741,12 +741,12 @@ async function loadUserOrders(userId) {
         orderList.innerHTML = "<p>No orders yet. Go get some cake!</p>";
     } else {
         orderList.innerHTML = orders.map(order => `
-            <div class="order-card">
-                <p><strong>Item:</strong> ${order.name}</p>
-                <p><strong>Price:</strong> RM${parseFloat(order.price).toFixed(2)}</p>
-                <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
-            </div>
-        `).join('');
+    <div class="order-card">
+        <p><strong>Item:</strong> ${order.product_name}</p> 
+        <p><strong>Price:</strong> RM${parseFloat(order.price).toFixed(2)}</p>
+        <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
+    </div>
+`).join('');
     }
 }
 
@@ -798,8 +798,58 @@ async function manageAuthUI() {
         console.log("No user session found.");
     }
 }
+// Function to simulate purchase when "Proceed" is clicked
+async function simulatePurchase(product) {
+    // 1. Get the current logged-in user
+    const { data: { user } } = await supabase.auth.getUser();
 
+    if (!user) {
+        alert("Please login to place an order!");
+        window.location.href = "login.html";
+        return;
+    }
 
+    // 2. Insert the demo order into Supabase
+    const { error } = await supabase
+        .from('orders')
+        .insert([
+            { 
+                user_id: user.id, 
+                product_name: product.name, 
+                price: product.price,
+                status: 'To Pay' // Default status for demo
+            }
+        ]);
+
+    if (error) {
+        console.error("Purchase failed:", error.message);
+    } else {
+        alert("Order placed successfully! Check 'My Orders'.");
+        window.location.href = "orders.html";
+    }
+}
+// Updated for your script.js
+async function handleCheckout() {
+    // We use the global 'cart' array you defined at the top of the script
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+    
+    // Loop through each item in the cart and send it to Supabase
+    for (const item of cart) {
+        await simulatePurchase({
+            name: item.product.name,
+            price: item.product.price
+        });
+    }
+    
+    clearCart(); // Wipes the cart after the order is saved
+    window.location.href = 'orders.html'; 
+}
+
+// Make it global so your HTML button can click it
+window.handleCheckout = handleCheckout;
 
 // Run this check every time the page finishes loading
 document.addEventListener('DOMContentLoaded', manageAuthUI);

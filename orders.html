@@ -6,9 +6,8 @@
     <title>My Orders - Nors Bakery</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-   <head>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="orders.css"> </head>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="orders.css">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -50,6 +49,7 @@
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()" data-testid="button-mobile-menu">
         <span class="hamburger" id="hamburger">☰</span>
     </button>
+</div>
             <!-- Mobile Menu -->
             <div class="mobile-menu" id="mobile-menu">
                 <nav class="nav-mobile">
@@ -64,64 +64,28 @@
     </header>
 
     <main class="orders-page">
-        <div class="container">
-            <div class="order-tabs">
-    <div class="tab-item active" onclick="filterOrders('all', this)">All</div>
-    <div class="tab-item" onclick="filterOrders('To Pay', this)">To Pay</div>
-    <div class="tab-item" onclick="filterOrders('To Ship', this)">To Ship</div>
-    <div class="tab-item" onclick="filterOrders('To Receive', this)">To Receive</div>
-    <div class="tab-item" onclick="filterOrders('Completed', this)">Completed</div>
-    <div class="tab-item" onclick="filterOrders('Cancelled', this)">Cancelled</div>
-</div>
-
-<div id="orders-list">
-    <div class="order-card" data-status="Completed">
-    <div class="order-header">
-        <span class="order-id">Order ID: #NB20250114</span>
-        <span class="order-status">Completed</span>
-    </div>
-    </div>
-    
-    <div class="order-card" data-status="To Pay">
-        <div class="order-header">
-            <span class="order-id">Order ID: #NB20250115</span>
-            <span class="order-status">To Pay</span>
+    <div class="container">
+        <div class="order-tabs">
+            <div class="tab-item active" onclick="filterOrders('all', this)">All</div>
+            <div class="tab-item" onclick="filterOrders('To Pay', this)">To Pay</div>
+            <div class="tab-item" onclick="filterOrders('To Ship', this)">To Ship</div>
+            <div class="tab-item" onclick="filterOrders('To Receive', this)">To Receive</div>
+            <div class="tab-item" onclick="filterOrders('Completed', this)">Completed</div>
         </div>
-        </div>
-</div>
 
-            <div id="orders-list">
-                <div class="order-card">
-                    <div class="order-header">
-                        <span class="order-id">Order ID: #NB20250114</span>
-                        <span class="order-status">Completed</span>
-                    </div>
-                    <div class="order-body">
-                        <div class="item-row">
-                            <img src="Gambars/cake1.jpg" alt="Cake" class="item-img">
-                            <div class="item-details">
-                                <div class="item-name">Three layered cake</div>
-                                <div class="item-meta">Quantity: 1</div>
-                                <div class="item-meta">RM 85.00</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="order-footer">
-                        <div class="order-total"><span>Order Total:</span>RM 85.00</div>
-                        <button class="btn-reorder">Buy Again</button>
-                    </div>
-                </div>
-
-                <div class="empty-orders" style="display:none;">
-                    <i class="fas fa-receipt fa-3x mb-3" style="color: #ddd;"></i>
-                    <p>No orders yet</p>
-                    <a href="product.html" class="btn btn-primary mt-3">Order Now</a>
-                </div>
+        <div id="orders-list">
             </div>
-        </div>
-    </main>
 
-    <script type="module" src="orders.js"></script>
+        <div class="empty-orders" style="display:none; flex-direction: column; align-items: center; padding: 40px;">
+            <i class="fas fa-receipt fa-3x mb-3" style="color: #ddd;"></i>
+            <p>No orders found in this category.</p>
+            <a href="products.html" class="btn btn-primary mt-3">Order Now</a>
+        </div>
+    </div>
+</main>
+
+<script type="module" src="script.js"></script>
+<script type="module" src="orders.js"></script>
 
     <script>
     function filterOrders(status, element) {

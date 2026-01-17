@@ -149,3 +149,15 @@
     background: hsl(325, 100%, 40%);
     box-shadow: 0 4px 12px rgba(230, 0, 126, 0.2);
 }   
+
+.order-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-to-pay { background: #fff3cd; color: #856404; }       /* Yellow */
+.status-to-ship { background: #cce5ff; color: #004085; }      /* Blue */
+.status-completed { background: #d4edda; color: #155724; }    /* Green */
+.status-cancelled { background: #f8d7da; color: #721c24; }    /* Red */
