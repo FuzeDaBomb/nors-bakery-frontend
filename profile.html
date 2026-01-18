@@ -55,43 +55,44 @@
 
     <main class="container">
         <div class="profile-container">
-            <div class="profile-header">
-                <img src="Gambars/default.jpg" alt="Profile Picture" class="profile-avatar" data-testid="img-profile-avatar">
-                <div class="profile-info">
-                    <h2 data-testid="text-profile-name">Guest</h2>
-                    <p data-testid="text-profile-email">aiemaneizz332@gmail.com</p>
-                    <div style="margin-top: 1rem;">
-                        <button class="btn btn-outline" data-testid="button-edit-profile">Edit Profile</button>
-                    </div>
-                </div>
-            </div>
+    <div class="profile-header">
+        <img src="Gambars/logo2.jpg" alt="Avatar" class="profile-avatar" id="user-avatar-img">
+        <div class="profile-info">
+            <h2 id="user-display-name">Loading...</h2>
+            <p id="user-email-header">Loading...</p>
+        </div>
+    </div>
 
-            <div class="profile-section">
-                <h3>Account Details</h3>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>Full Name</label>
-                        <p>Guest</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Phone Number</label>
-                        <p>N/A</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Member Since</label>
-                        <p>January 2025</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Total Orders</label>
-                        <p>1 Orders</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-section">
-                <button class="btn btn-primary" style="background: #ef4444; color: white;" onclick="logout()" data-testid="button-logout">Logout</button>
+    <div class="profile-section">
+        <h3>Account Details</h3>
+        <div class="info-grid">
+            <div class="info-item">
+    <label>Full Name</label>
+    <p id="info-full-name">Loading...</p>
+    <input type="text" id="edit-name-input" class="form-control" style="display: none; width: 100%; padding: 0.5rem; margin-top: 5px;">
+</div>
+            <div class="info-item">
+                <label>Email Address</label>
+                <p id="info-email">Loading...</p>
             </div>
         </div>
+    </div>
+
+    <div class="profile-section">
+        <h3>Order History</h3>
+        <div id="order-history-container">
+            <p class="loading-spinner">Fetching your past orders...</p>
+        </div>
+    </div>
+
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+        <button id="edit-profile-btn" class="btn btn-primary">Edit Profile</button>
+        <button id="logout-btn" class="btn btn-outline">Logout</button>
+    </div>
+
+    <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+</div>
+
     </main>
 
     <!-- Footer -->

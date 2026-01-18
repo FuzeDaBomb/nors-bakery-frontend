@@ -740,12 +740,13 @@ async function loadUserOrders(userId) {
     if (orders.length === 0) {
         orderList.innerHTML = "<p>No orders yet. Go get some cake!</p>";
     } else {
-    orderList.innerHTML = orders.map(order => `
-        <div class="order-card">
-            <p><strong>Item:</strong> ${order.name}</p> <p><strong>Price:</strong> RM${parseFloat(order.price).toFixed(2)}</p>
-            <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
-        </div>
-    `).join('');
+        orderList.innerHTML = orders.map(order => `
+            <div class="order-card">
+                <p><strong>Item:</strong> ${order.name}</p>
+                <p><strong>Price:</strong> RM${parseFloat(order.price).toFixed(2)}</p>
+                <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
+            </div>
+        `).join('');
     }
 }
 
@@ -797,65 +798,8 @@ async function manageAuthUI() {
         console.log("No user session found.");
     }
 }
-// Function to simulate purchase when "Proceed" is clicked
-async function simulatePurchase(product) {
-    // 1. Get the user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    if (userError || !user) {
-        console.error("Auth Check Failed:", userError);
-        alert("Please login to place an order!");
-        window.location.href = "login.html";
-        return;
-    }
 
-    console.log("Found User ID:", user.id);
-    console.log("Sending Product:", product.name, "Price:", product.price);
-
-    // 2. Insert into 'transactions' (Make sure this name matches your Supabase table)
-    const { data, error } = await supabase
-        .from('transactions') 
-        .insert([
-            { 
-                user_id: user.id, 
-                name: product.name, // In your code, you used product_name earlier. Change to 'name' if that's your DB column.
-                price: parseFloat(product.price), // Ensure it's a number
-                created_at: new Date().toISOString()
-            }
-        ]);
-
-    if (error) {
-        // If this runs, it will tell you exactly which column is missing or if RLS is blocking it
-        console.error("Supabase Insert Error:", error.message);
-        console.error("Error Details:", error.details);
-        alert("Database Error: " + error.message);
-    } else {
-        console.log("Success! Database updated:", data);
-        alert("Order placed successfully! Check your profile.");
-    }
-}
-// Updated for your script.js
-async function handleCheckout() {
-    // We use the global 'cart' array you defined at the top of the script
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
-    
-    // Loop through each item in the cart and send it to Supabase
-    for (const item of cart) {
-        await simulatePurchase({
-            name: item.product.name,
-            price: item.product.price
-        });
-    }
-    
-    clearCart(); // Wipes the cart after the order is saved
-    window.location.href = 'orders.html'; 
-}
-
-// Make it global so your HTML button can click it
-window.handleCheckout = handleCheckout;
 
 // Run this check every time the page finishes loading
 document.addEventListener('DOMContentLoaded', manageAuthUI);

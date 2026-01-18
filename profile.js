@@ -1,59 +1,110 @@
-// 1. Import the supabase connection from your main script
-import { supabase } from './script.js'; 
+import { supabase } from './script.js';
 
-async function protectPage() {
-    console.log("Checking authorization...");
-    
-    // 2. Ask Supabase for the current session
-    const { data: { session }, error } = await supabase.auth.getSession();
+document.addEventListener('DOMContentLoaded', () => {
+    loadProfileData();
+    loadOrderHistory();
 
-    if (error || !session) {
-        console.log("No active session found. Redirecting...");
-        alert("Please login to access your profile.");
-        window.location.replace('login.html'); // Use replace so they can't click "back"
+    document.getElementById('edit-profile-btn').addEventListener('click', toggleEditMode);
+    document.getElementById('logout-btn').addEventListener('click', handleLogout);
+});
+
+let isEditing = false;
+
+async function toggleEditMode() {
+    const btn = document.getElementById('edit-profile-btn');
+    const nameDisplay = document.getElementById('info-full-name');
+    const nameInput = document.getElementById('edit-name-input');
+
+    if (!isEditing) {
+        // --- SWITCHING TO EDIT MODE ---
+        isEditing = true;
+        btn.textContent = "Done"; // Change button text
+        btn.style.background = "var(--secondary)"; // Optional: change color to green/secondary
+
+        nameInput.value = nameDisplay.textContent;
+        nameDisplay.style.display = "none";
+        nameInput.style.display = "block";
+        nameInput.focus();
+    } else {
+        // --- SAVING AND SWITCHING BACK ---
+        const newName = nameInput.value.trim();
+
+        if (newName && newName !== nameDisplay.textContent) {
+            const { error } = await supabase.auth.updateUser({
+                data: { full_name: newName }
+            });
+
+            if (error) {
+                alert("Update failed: " + error.message);
+                return;
+            }
+            nameDisplay.textContent = newName;
+            document.getElementById('user-display-name').textContent = newName;
+        }
+
+        // Ask about photo after name is done
+        const changePhoto = confirm("Would you like to change your profile photo too?");
+        if (changePhoto) {
+            document.getElementById('avatar-input').click();
+        }
+
+        // Reset UI
+        isEditing = false;
+        btn.textContent = "Edit Profile";
+        btn.style.background = ""; // Reset to original CSS
+        nameDisplay.style.display = "block";
+        nameInput.style.display = "none";
+    }
+}
+
+// --- Load User Data ---
+async function loadProfileData() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+        window.location.href = 'login.html';
         return;
     }
 
-    console.log("Access granted for:", session.user.email);
-    // Now call your existing function to load data
-    initProfile(); 
+    const name = user.user_metadata?.full_name || user.email.split('@')[0];
+    const avatar = user.user_metadata?.avatar_url || 'Gambars/logo2.jpg';
+
+    document.getElementById('user-display-name').textContent = name;
+    document.getElementById('info-full-name').textContent = name;
+    document.getElementById('user-email-header').textContent = user.email;
+    document.getElementById('info-email').textContent = user.email;
+    document.getElementById('user-avatar-img').src = avatar;
 }
 
-// Start the check immediately
-protectPage();
+// --- Load Order History ---
+async function loadOrderHistory() {
+    const { data: { user } } = await supabase.auth.getUser();
+    const container = document.getElementById('order-history-container');
 
-async function fetchOrders(userId) {
     const { data: orders, error } = await supabase
         .from('transactions')
         .select('*')
-        .eq('user_id', userId); // This works because of the RLS policy you set!
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
-    const orderContainer = document.getElementById('order-history');
-
-    if (error) {
-        orderContainer.innerHTML = '<p>Error loading orders.</p>';
+    if (error || !orders || orders.length === 0) {
+        container.innerHTML = `<p style="color: var(--muted-foreground);">No orders found.</p>`;
         return;
     }
 
-    if (!orders || orders.length === 0) {
-        orderContainer.innerHTML = '<p>You haven\'t placed any orders yet.</p>';
-        return;
-    }
-
-    // 4. Display orders in a list
-    orderContainer.innerHTML = orders.map(order => `
-        <div class="order-item" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
-            <p><strong>Order ID:</strong> #${order.id}</p>
-            <p><strong>Product:</strong> ${order.name}</p>
-            <p><strong>Total:</strong> RM${order.price}</p>
+    container.innerHTML = orders.map(order => `
+        <div style="background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1rem; color: #000;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <strong>Order #${order.id.slice(0, 8)}</strong>
+                <span style="color: var(--primary); font-weight: bold;">RM${order.total_amount.toFixed(2)}</span>
+            </div>
+            <div style="font-size: 0.9rem; color: #666;">
+                Status: ${order.status}
+            </div>
         </div>
     `).join('');
 }
 
-// Logout function
-window.logout = async () => {
+async function handleLogout() {
     await supabase.auth.signOut();
-    window.location.href = 'profile.html';
-};
-
-document.addEventListener('DOMContentLoaded', initProfile);
+    window.location.href = 'index.html';
+}

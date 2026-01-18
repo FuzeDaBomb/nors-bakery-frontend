@@ -73,6 +73,20 @@
                 }
             }
         }
+        // Example: Function to delete a product from the frontend via Admin
+async function deleteProduct(productId) {
+    const response = await fetch(`${API_URL}/products/${productId}`, {
+        method: 'DELETE'
+    });
+    if (response.ok) {
+        alert("Product removed from bakery!");
+        loadAdminProducts(); // Refresh list
+    }
+}
+async function loadAllOrders() {
+    const { data, error } = await supabase.from('transactions').select('*');
+    // Render this into a table for the Admin to see who bought what
+}
     </script>
 </body>
 </html>
