@@ -76,7 +76,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary) 0%, hsl(310, 100%, 70%) 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, hsl(310, 100%, 62%) 100%);
     color: var(--primary-foreground);
     border: none;
 }

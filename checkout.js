@@ -346,3 +346,40 @@ function sendMessage() {
 
 function sendQuickAction(action) {
 }
+
+async function placeOrder() {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert([{ 
+            user_id: user.id, 
+            total_price: calculateTotal(), 
+            status: 'To Pay' 
+        }])
+        .select()
+        .single();
+
+    if (orderError) return console.error("Order failed:", orderError);
+
+    const orderItems = cart.map(item => ({
+        order_id: order.id, 
+        product_id: item.product.id,
+        qty: item.quantity,
+        price: item.product.price,
+        rated: false
+    }));
+
+
+    const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+    if (itemsError) {
+        console.error("Error syncing items:", itemsError);
+    } else {
+        alert("Order placed successfully!");
+        localStorage.removeItem('cart'); 
+        window.location.href = 'orders.html';
+    }
+}

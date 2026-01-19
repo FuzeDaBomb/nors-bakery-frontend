@@ -82,18 +82,18 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="card shadow-sm border-0 border-start border-success border-5 h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Registered Users</div>
-                                            <div id="count-users" class="h5 mb-0 font-weight-bold text-gray-800">3</div>
-                                        </div>
-                                        <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
+                        <div class="card shadow-sm border-0 border-start border-success border-5 h-100 py-2">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Registered Users</div>
+                                        <div id="total-registered-users" class="h5 mb-0 font-weight-bold text-gray-800">Loading...</div>
                                     </div>
+                                    <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                         <div class="col-md-4">
                             <div class="card shadow-sm border-0 border-start border-warning border-5 h-100 py-2">
                                 <div class="card-body">
@@ -145,26 +145,32 @@
                 </div>
 
                 <div id="users-section" style="display:none;">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                            <h6 class="m-0 font-weight-bold text-primary">Registered Customers</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr><th>User ID</th><th>Name</th><th>Email</th><th>Join Date</th><th>Actions</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td>#101</td><td>Guest</td><td>Itpatest@gmail.com</td><td>2025-12-12</td>
-                                            <td><button class="btn btn-sm btn-outline-primary">Edit</button> <button class="btn btn-sm btn-outline-danger">Delete</button></td>
-                                        </tr>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">Registered Customers</h6>
+                        <button class="btn btn-sm btn-primary" onclick="loadUsers()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Join Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-table-body">
                                     </tbody>
-                                </table>
-                            </div>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
 
                 <div id="admins-section" style="display:none;">
                     <div class="card shadow mb-4">
@@ -256,5 +262,78 @@
             window.location.href = 'index.html';
         }
     </script>
+    <script type="module">
+    import { supabase } from './script.js';
+
+// Load users when the 'Manage Users' tab is clicked
+async function loadUsers() {
+    const tableBody = document.getElementById('user-table-body');
+    tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Fetching from database...</td></tr>';
+
+    // Fetching from our mirrored public.profiles table
+    const { data: users, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Fetch error:', error.message);
+        return;
+    }
+
+    tableBody.innerHTML = users.map(user => `
+        <tr>
+            <td>#${user.id.substring(0, 5)}</td>
+            <td>${user.full_name || 'N/A'}</td>
+            <td>${user.email}</td>
+            <td>${new Date(user.created_at).toLocaleDateString()}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="editUser('${user.id}')">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Global function for the Delete button
+window.deleteUser = async (userId) => {
+    if (confirm("Permanently delete this user from the records?")) {
+        const { error } = await supabase
+            .from('profiles')
+            .delete()
+            .eq('id', userId);
+
+        if (error) {
+            alert("Delete failed: " + error.message);
+        } else {
+            alert("User record removed.");
+            loadUsers(); // Refresh table
+        }
+    }
+};
+
+// Hook into your existing showSection function
+const originalShowSection = window.showSection;
+window.showSection = function(name) {
+    originalShowSection(name);
+    if (name === 'users') {
+        loadUsers();
+    }
+};
+// Add this inside your script to listen for new users while the page is open
+supabase
+  .channel('public:profiles')
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'profiles' }, payload => {
+    console.log('New user joined!', payload.new);
+    loadUsers(); // Automatically re-renders the table when someone signs up
+  })
+  .subscribe();
+
+    document.addEventListener('DOMContentLoaded', displayUserStats);
+</script>
 </body>
 </html>

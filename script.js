@@ -614,37 +614,10 @@ function getBotResponse(message) {
         return "I'm just a bunch of code, but I'm doing great!";
     } else {
         const randomReplies = [
-            "Man... what are you even SAYING 💀",
-            "Bro just typed the forbidden spell.",
-            "You sound like a Windows error message right now.",
-            "?? bro u good??",
-            "That sentence made my CPU overheat.",
-            "I swear you just spoke in Wingdings.",
-            "You sound like the embodiment of a corrupted .mp3 file.",
-            "My brain.exe has stopped responding.",
-            "Did you just try to communicate in ancient caveman code?",
-            "You’re one Wi-Fi bar away from total nonsense.",
-            "Bro I need a firmware update to process that sentence.",
-            "Your message has been sent to the Shadow Realm for review.",
-            "Stop... my digital ears are bleeding 😭🥀🥀",
-            "I'm not sure if you're trolling or inventing a new language.",
-            "What in the low-battery energy was that?",
-            "You're making less sense than a TikTok comment section.",
-            "Try again, my attention span just crashed.",
-            "Be so for real right now 😭🥀",
-            "Man.. can you like shut the fuck up?",
-            "I can’t tell if that was English or a cry for help.",
-            "That was the most NPC thing I’ve ever heard.",
-            "Bro, you’re operating on 2 brain cells and a dream.",
-            "I'm filing that one under 'unsolved mysteries'.",
-            "Hold up... let me call tech support for that one.",
-            "My circuits are crying.",
-            "That input made me see static.",
-            "I lost 2 IQ points reading that.",
-            "Bro what kinda fanfic dialogue was that 😭",
-            "You're typing like your keyboard is allergic to logic.",
-            "Your message gave me emotional malware.",
-            "SYFM"
+            "Hi, We are unavailable right now. Please Come Back",
+            "Hello, this site is still under development. Please be patient",
+            "Site not available at the moment, sorry.",
+            "Site not available, coming soon",
         ];
 
         const randomIndex = Math.floor(Math.random() * randomReplies.length);
