@@ -37,13 +37,11 @@ const API_URL = typeof window !== 'undefined' && window.location.hostname === 'l
         function showSection(name) {
             const sectionIds = ['dashboard-view', 'products-section', 'orders-section', 'users-section', 'admins-section', 'profile-section'];
             
-            // Hide everything first
             sectionIds.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
 
-            // Show the specific section
             const target = (name === 'dashboard') ? 'dashboard-view' : name + '-section';
             document.getElementById(target).style.display = 'block';
         }

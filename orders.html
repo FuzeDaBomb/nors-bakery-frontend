@@ -102,7 +102,7 @@
                             <div class="item-details">
                                 <div class="item-name">Three layered cake</div>
                                 <div class="item-meta">Quantity: 1</div>
-                                <div class="item-meta">RM 85.00</div>
+                                <div class="item-meta">RM 84.80</div>
                             </div>
                         </div>
                     </div>
@@ -125,17 +125,14 @@
 
     <script>
     function filterOrders(status, element) {
-        // 1. Update the Tab Styling
         const tabs = document.querySelectorAll('.tab-item');
         tabs.forEach(tab => tab.classList.remove('active'));
         element.classList.add('active');
 
-        // 2. Filter the Order Cards
         const cards = document.querySelectorAll('.order-card');
         let visibleCount = 0;
 
         cards.forEach(card => {
-            // Get the status from the data-status attribute OR the text inside the status span
             const cardStatus = card.getAttribute('data-status') || 
                                card.querySelector('.order-status').textContent.trim();
 
@@ -147,7 +144,6 @@
             }
         });
 
-        // 3. Show "No Orders" message if the filter result is empty
         const emptyMessage = document.querySelector('.empty-orders');
         if (visibleCount === 0) {
             emptyMessage.style.display = 'block';

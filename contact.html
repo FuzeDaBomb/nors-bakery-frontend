@@ -32,15 +32,13 @@
 
                 <div class="header-actions">
                     <div id="auth-logged-out" style="display: flex; align-items: center;">
-                        <a href="login.html" class="btn btn-outline">Login</a>
-                        <a href="register.html" class="btn btn-primary">Sign Up</a>
+                        <a href="login.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem; margin-right: 0.5rem;" data-testid="button-login">Login</a>
+                        <a href="register.html" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem; margin-right: 1rem;" data-testid="button-register">Sign Up</a>
                     </div>
 
-                    <div id="auth-logged-in" style="display: none; gap: 10px; align-items: center;">
-                        <a href="profile.html">
-                            <img id="user-avatar" src="Gambars/default.jpg" style="width:35px; height:35px; border-radius:50%; object-fit: cover;">
-                        </a>
-                        <button onclick="handleLogout()" class="btn btn-outline">Logout</button>
+                    <div id="auth-logged-in" style="display: none; gap: 10px; align-items: center; margin-right: 1rem;">
+                        <a href="profile.html"><img id="user-avatar" src="Gambars/default.jpg" style="width:35px; height:35px; border-radius:50%; object-fit: cover; border: 2px solid var(--primary);"></a>
+                        <button onclick="handleLogout()" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Logout</button>
                     </div>
 
                     <button class="cart-btn" onclick="toggleCart()">
@@ -176,9 +174,7 @@
                         Baking fresh happiness since 2012.
                     </p>
                     <div class="social-links">
-                        <a href="#" class="social-link">📘</a>
-                        <a href="#" class="social-link">📷</a>
-                        <a href="#" class="social-link">🐦</a>
+                        <a href="https://www.instagram.com/nors_bakery" class="social-link" target="_blank" rel="noopener noreferrer">Instagram 📷</a>
                     </div>
                 </div>
 
@@ -205,9 +201,9 @@
                 <div class="footer-section">
                     <h4>Contact Info</h4>
                     <div class="footer-contact">
-                        <p>📍 Nors bakery</p>
-                        <p>📞 011234567</p>
-                        <p>✉️ Nors@bakery.com.my</p>
+                        <p>📍 Gelugor,Penang</p>
+                        <p>📞 MAINLAND +60 19-473 5195</p>
+                        <p>📞 PENANG ISLAND +60 11-2861 9464</p>
                         <p>🕒 operation hours 8am-10pm</p>
                     </div>
                 </div>

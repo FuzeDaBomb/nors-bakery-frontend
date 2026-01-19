@@ -1,8 +1,3 @@
-/**
- * Nors Bakery Admin Logic
- */
-
-// 1. Navigation Logic: Controls which section is visible
 window.showSection = function(name) {
     const sectionIds = [
         'dashboard-view', 
@@ -13,13 +8,11 @@ window.showSection = function(name) {
         'profile-section'
     ];
     
-    // Hide everything first
     sectionIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
 
-    // Show the specific section
     const target = (name === 'dashboard') ? 'dashboard-view' : name + '-section';
     const targetEl = document.getElementById(target);
     
@@ -30,7 +23,6 @@ window.showSection = function(name) {
     }
 };
 
-// 2. Logic for updating prices
 window.updatePrice = async function() {
     const name = document.getElementById('itemName').value;
     const price = document.getElementById('newPrice').value;
@@ -57,7 +49,6 @@ window.updatePrice = async function() {
         if (data.success) {
             statusLabel.style.color = "green";
             statusLabel.innerText = data.message;
-            // Clear inputs on success
             document.getElementById('itemName').value = '';
             document.getElementById('newPrice').value = '';
         } else {
@@ -71,14 +62,13 @@ window.updatePrice = async function() {
     }
 };
 
-// 3. Authentication Logic
+//  Authentication Logic
 window.handleLogout = function() {
-    // Clear any admin sessions if you have them
     localStorage.removeItem('currentUser');
     window.location.href = 'index.html';
 };
 
-// 4. Initial Load (Optional: Remove overlay when ready)
+// Initial Load 
 window.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
     if (overlay) {
@@ -91,7 +81,6 @@ window.addEventListener('DOMContentLoaded', () => {
 function renderCheckoutItems() {
     const container = document.getElementById('checkout-items');
     
-    // 1. Specifically look for window.cart
     const currentCart = window.cart || [];
     
     if (currentCart.length === 0) {
@@ -100,7 +89,6 @@ function renderCheckoutItems() {
         return;
     }
 
-    // 2. Ensure property names match (e.g., image_url vs imageUrl)
     container.innerHTML = currentCart.map(item => `
         <div class="summary-item" style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
             <img src="${item.product.image_url || item.product.imageUrl}" 

@@ -16,17 +16,15 @@ async function toggleEditMode() {
     const nameInput = document.getElementById('edit-name-input');
 
     if (!isEditing) {
-        // --- SWITCHING TO EDIT MODE ---
         isEditing = true;
-        btn.textContent = "Done"; // Change button text
-        btn.style.background = "var(--secondary)"; // Optional: change color to green/secondary
+        btn.textContent = "Done";
+        btn.style.background = "var(--secondary)";
 
         nameInput.value = nameDisplay.textContent;
         nameDisplay.style.display = "none";
         nameInput.style.display = "block";
         nameInput.focus();
     } else {
-        // --- SAVING AND SWITCHING BACK ---
         const newName = nameInput.value.trim();
 
         if (newName && newName !== nameDisplay.textContent) {
@@ -42,22 +40,15 @@ async function toggleEditMode() {
             document.getElementById('user-display-name').textContent = newName;
         }
 
-        // Ask about photo after name is done
-        const changePhoto = confirm("Would you like to change your profile photo too?");
-        if (changePhoto) {
-            document.getElementById('avatar-input').click();
-        }
 
-        // Reset UI
         isEditing = false;
         btn.textContent = "Edit Profile";
-        btn.style.background = ""; // Reset to original CSS
+        btn.style.background = "";
         nameDisplay.style.display = "block";
         nameInput.style.display = "none";
     }
 }
 
-// --- Load User Data ---
 async function loadProfileData() {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error || !user) {
@@ -75,11 +66,9 @@ async function loadProfileData() {
     document.getElementById('user-avatar-img').src = avatar;
 }
 
-// --- Load Order History ---
 async function loadOrderHistory() {
     const { data: { user } } = await supabase.auth.getUser();
     const container = document.getElementById('order-history-container');
-
     const { data: orders, error } = await supabase
         .from('transactions')
         .select('*')

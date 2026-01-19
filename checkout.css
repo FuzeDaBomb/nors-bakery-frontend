@@ -212,8 +212,6 @@ h1, h2, h3, h4, h5, h6 {
     color: #d1d5db;
 }
 
-/* --- Checkout Specific Styles (Extending original CSS) --- */
-
 .checkout-section {
     padding: 3rem 0;
     min-height: 80vh;
@@ -373,7 +371,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .summary-price {
     font-weight: 600;
-    color: var(--primary-foreground); /* Using dark text for readability on light bg */
+    color: var(--primary-foreground);
     color: var(--foreground);
 }
 

@@ -1,12 +1,10 @@
-/* Order History Layout */
 .orders-page {
     padding-top: 120px;
     padding-bottom: 60px;
-    background-color: #fdfafb; /* Soft bakery-themed background */
+    background-color: #fdfafb;
     min-height: 100vh;
 }
 
-/* Shopee-style Status Tabs */
 .order-tabs {
     display: flex;
     background: #fff;
@@ -40,7 +38,6 @@
     color: var(--primary);
 }
 
-/* Professional Order Card */
 .order-card {
     background: #fff;
     border-radius: 12px;
@@ -157,7 +154,7 @@
     font-weight: 600;
 }
 
-.status-to-pay { background: #fff3cd; color: #856404; }       /* Yellow */
-.status-to-ship { background: #cce5ff; color: #004085; }      /* Blue */
-.status-completed { background: #d4edda; color: #155724; }    /* Green */
-.status-cancelled { background: #f8d7da; color: #721c24; }    /* Red */
+.status-to-pay { background: #fff3cd; color: #856404; }
+.status-to-ship { background: #cce5ff; color: #004085; }
+.status-completed { background: #d4edda; color: #155724; }
+.status-cancelled { background: #f8d7da; color: #721c24; }

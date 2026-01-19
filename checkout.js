@@ -15,7 +15,7 @@ const cartEmpty = document.getElementById('cart-empty');
 const cartItems = document.getElementById('cart-items');
 const cartFooter = document.getElementById('cart-footer');
 const cartCount = document.getElementById('cart-count');
-const cartCountHeader = document.getElementById('cart-count-header'); // Added for checkout page
+const cartCountHeader = document.getElementById('cart-count-header'); 
 const cartTotal = document.getElementById('cart-total');
 const mobileMenu = document.getElementById('mobile-menu');
 const hamburger = document.getElementById('hamburger');
@@ -25,16 +25,12 @@ const quickActions = document.getElementById('quick-actions');
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    // Load cart from local storage
     loadCart();
 
-    // Get current page name
     const currentPage = getCurrentPage();
 
-    // Load content based on page
     if (currentPage === 'products') {
         loadProducts();
-        // Check for URL category parameter
         const urlParams = new URLSearchParams(window.location.search);
         const category = urlParams.get('category');
         if (category) {
@@ -46,17 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     updateCartUI();
     
-    // Only set active nav if elements exist (checkout page might not have nav-desktop)
     if (document.querySelector('.nav-desktop')) {
         setActiveNavigation();
     }
     
-    // Only init chatbot if elements exist
     if (document.getElementById('chatbot-window')) {
         initializeChatbot();
     }
 
-    // Set default pickup date to tomorrow
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const pickupDateInput = document.getElementById('pickup-date');
@@ -100,14 +93,12 @@ function loadProducts() {
 function filterProducts(category) {
     currentCategory = category;
 
-    // Update filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     const activeBtn = document.querySelector(`[data-testid="button-filter-${category}"]`);
     if (activeBtn) activeBtn.classList.add('active');
 
-    // Filter and display products
     const filteredProducts = category === 'all'
         ? products
         : products.filter(product => product.category === category);
@@ -174,7 +165,6 @@ function addToCart(productId, quantity = 1) {
 
     saveCart();
     updateCartUI();
-    // Optional: showToast('Item added to cart!');
 }
 
 function updateCartQuantity(productId, quantity) {
@@ -207,7 +197,6 @@ function updateCartUI() {
     const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cart.reduce((sum, item) => sum + (parseFloat(item.product.price) * item.quantity), 0);
 
-    // Update cart count
     if (cartCount) {
         cartCount.textContent = itemCount;
         cartCount.style.display = itemCount > 0 ? 'flex' : 'none';
@@ -218,7 +207,6 @@ function updateCartUI() {
         cartCountHeader.style.display = itemCount > 0 ? 'flex' : 'none';
     }
 
-    // Update cart content
     if (cartItems && cartFooter && cartEmpty) {
         if (cart.length === 0) {
             cartEmpty.style.display = 'flex';
@@ -295,15 +283,12 @@ function checkout() {
         return;
     }
     
-    // Save current state before redirecting
     saveCart();
     
     console.log("Redirecting to checkout.html...");
-    // Redirect to checkout page
     window.location.href = 'checkout.html';
 }
 
-// Mobile Menu Functions
 function toggleMobileMenu() {
     if (mobileMenu && hamburger) {
         mobileMenu.classList.toggle('open');
@@ -319,7 +304,6 @@ function closeMobileMenu() {
     }
 }
 
-// Page and Navigation Functions
 function getCurrentPage() {
     const path = window.location.pathname;
     const page = path.split('/').pop();
@@ -329,12 +313,10 @@ function getCurrentPage() {
 function setActiveNavigation() {
     const currentPage = getCurrentPage();
 
-    // Remove all active classes
     document.querySelectorAll('.nav-desktop a, .nav-mobile a').forEach(link => {
         link.classList.remove('active');
     });
 
-    // Add active class to current page links
     const activeLinks = document.querySelectorAll(`[href="${currentPage}.html"], [href="index.html"]`);
     activeLinks.forEach(link => {
         if ((currentPage === 'index' && link.getAttribute('href') === 'index.html') ||
@@ -344,9 +326,7 @@ function setActiveNavigation() {
     });
 }
 
-// Chatbot Functions (Keeping simplified)
 function initializeChatbot() {
-    // Mock init
 }
 
 function toggleChatbot() {
@@ -365,5 +345,4 @@ function sendMessage() {
 }
 
 function sendQuickAction(action) {
-    // Mock action
 }

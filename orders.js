@@ -58,7 +58,6 @@ async function loadMyOrders() {
     }
 }
 
-// Global filter function (accessible from HTML)
 window.filterOrders = function(status, element) {
     const tabs = document.querySelectorAll('.tab-item');
     tabs.forEach(tab => tab.classList.remove('active'));

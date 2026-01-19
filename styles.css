@@ -116,7 +116,7 @@ h1, h2, h3, h4, h5, h6 {
     background-color: var(--blue-btn-hover);
     transform: translateY(-2px);
     box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
-    color: rgb(30, 255, 68); /* Ensures text stays white on hover */
+    color: rgb(30, 255, 68);
 }
 
 /* Active/Click effect */
@@ -952,7 +952,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .cart-close:hover {
-    color: #ef4444; /* Turns red on hover */
+    color: #ef4444;
     transform: scale(1.1);
 }
 
@@ -1334,33 +1334,32 @@ select:focus {
 }
 
 .login-container {
-    max-width: 400px;         /* Increased slightly for better look */
+    max-width: 400px;        
     width: 90%;
-    margin: 100px auto;      /* This centers it horizontally */
+    margin: 100px auto;     
     padding: 30px;
     background: var(--card);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
-    display: flex;           /* Added to align children */
-    flex-direction: column;  /* Stack items vertically */
-    align-items: center;     /* Center items horizontally inside the box */
+    display: flex;           
+    flex-direction: column;  
+    align-items: center;    
 }
 
 .login-form {
-    width: 100%;             /* Form takes full width of the 400px box */
+    width: 100%;            
     display: flex;
     flex-direction: column;
-    gap: 15px;               /* Adds space between inputs */
+    gap: 15px;              
 }
 
 .login-form input {
-    width: 100% !important;  /* Force it to stay inside the box */
+    width: 100% !important; 
     padding: 12px;
     border: 1px solid var(--border);
     border-radius: var(--border-radius);
 }
 
-/* --- Checkout Specific Polish --- */
 
 /* Step Numbers Enhancement */
 .step-circle {
@@ -1371,7 +1370,7 @@ select:focus {
 /* Form Inputs within Checkout */
 .checkout-form-section .form-group input {
     background: var(--background);
-    border: 1px solid #e2e8f0; /* Softer border than the global one */
+    border: 1px solid #e2e8f0; 
     transition: all 0.2s ease;
 }
 
@@ -1390,7 +1389,7 @@ select:focus {
 
 /* Grand Total Color */
 .grand-total span:last-child {
-    color: var(--input); /* Using your deep brown/primary for the final price */
+    color: var(--input); 
 }
 
 /* Radio Option Styling */
@@ -1414,7 +1413,7 @@ select:focus {
     to { opacity: 1; transform: translateY(0); }
 }
 .admin-container {
-    max-width: 1100px; /* Much wider for the data table */
+    max-width: 1100px;
     margin: 4rem auto;
     padding: 2rem;
     background: var(--card);
