@@ -262,78 +262,93 @@
             window.location.href = 'index.html';
         }
     </script>
-    <script type="module">
+   <script type="module">
     import { supabase } from './script.js';
 
-// Load users when the 'Manage Users' tab is clicked
-async function loadUsers() {
-    const tableBody = document.getElementById('user-table-body');
-    tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Fetching from database...</td></tr>';
+    // 1. Fetch the count for the "Registered Users" card
+    async function displayUserStats() {
+        try {
+            // This calls the RPC function you created in the Supabase SQL Editor
+            const { data: userCount, error } = await supabase.rpc('get_user_count');
+            
+            if (error) throw error;
 
-    // Fetching from our mirrored public.profiles table
-    const { data: users, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-    if (error) {
-        console.error('Fetch error:', error.message);
-        return;
-    }
-
-    tableBody.innerHTML = users.map(user => `
-        <tr>
-            <td>#${user.id.substring(0, 5)}</td>
-            <td>${user.full_name || 'N/A'}</td>
-            <td>${user.email}</td>
-            <td>${new Date(user.created_at).toLocaleDateString()}</td>
-            <td>
-                <button class="btn btn-sm btn-outline-primary" onclick="editUser('${user.id}')">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-                <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}')">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-// Global function for the Delete button
-window.deleteUser = async (userId) => {
-    if (confirm("Permanently delete this user from the records?")) {
-        const { error } = await supabase
-            .from('profiles')
-            .delete()
-            .eq('id', userId);
-
-        if (error) {
-            alert("Delete failed: " + error.message);
-        } else {
-            alert("User record removed.");
-            loadUsers(); // Refresh table
+            const countElement = document.getElementById('total-registered-users');
+            if (countElement) {
+                countElement.textContent = userCount;
+            }
+        } catch (err) {
+            console.error('Error fetching user count:', err.message);
+            // Fallback: if RPC fails, count the rows in the profiles table instead
+            const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+            document.getElementById('total-registered-users').textContent = count || "0";
         }
     }
-};
 
-// Hook into your existing showSection function
-const originalShowSection = window.showSection;
-window.showSection = function(name) {
-    originalShowSection(name);
-    if (name === 'users') {
-        loadUsers();
+    // 2. Fetch all users for the "Manage Users" table
+    async function loadUsers() {
+        const tableBody = document.getElementById('user-table-body');
+        if (!tableBody) return;
+        
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Fetching from database...</td></tr>';
+
+        const { data: users, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Fetch error:', error.message);
+            return;
+        }
+
+        tableBody.innerHTML = users.map(user => `
+            <tr>
+                <td>#${user.id.substring(0, 5)}</td>
+                <td>${user.full_name || 'N/A'}</td>
+                <td>${user.email}</td>
+                <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${user.id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </td>
+            </tr>
+        `).join('');
     }
-};
-// Add this inside your script to listen for new users while the page is open
-supabase
-  .channel('public:profiles')
-  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'profiles' }, payload => {
-    console.log('New user joined!', payload.new);
-    loadUsers(); // Automatically re-renders the table when someone signs up
-  })
-  .subscribe();
 
-    document.addEventListener('DOMContentLoaded', displayUserStats);
+    // 3. Expose functions to the Global Window (So your HTML buttons can see them)
+    window.loadUsers = loadUsers;
+    window.displayUserStats = displayUserStats;
+    window.deleteUser = async (userId) => {
+        if (confirm("Permanently delete this user?")) {
+            const { error } = await supabase.from('profiles').delete().eq('id', userId);
+            if (!error) loadUsers();
+        }
+    };
+
+    // 4. Hook into the sidebar navigation
+    const originalShowSection = window.showSection;
+    window.showSection = function(name) {
+        originalShowSection(name);
+        if (name === 'users') loadUsers();
+    };
+
+    // 5. Run stats on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        displayUserStats();
+    });
+
+    // 6. Real-time Listener (Update count/table if someone registers while you watch)
+    supabase
+      .channel('public:profiles')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
+        displayUserStats();
+        if (document.getElementById('users-section').style.display !== 'none') {
+            loadUsers();
+        }
+      })
+      .subscribe();
 </script>
 </body>
 </html>
